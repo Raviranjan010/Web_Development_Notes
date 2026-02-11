@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fullstack Development Journey</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Warm, earthy palette with tech accents */
+            --deep-navy: #1a1f2e;
+            --slate: #2a3142;
+            --warm-gray: #3d4354;
+            --cream: #f4f1ea;
+            --sand: #e8dcc4;
+            --rust: #d97757;
+            --terracotta: #c85d3c;
+            --sage: #7ba591;
+            --ocean: #5b9aa9;
+            --lavender: #a48cb5;
+            --gold: #d4a574;
+            --off-white: #fafaf8;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: linear-gradient(135deg, var(--deep-navy) 0%, #252b3d 100%);
+            color: var(--cream);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* Subtle background texture */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                radial-gradient(circle at 20% 30%, rgba(123, 165, 145, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(217, 119, 87, 0.06) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 3rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        header {
+            padding: 1.5rem 0;
+            position: sticky;
+            top: 0;
+            background: rgba(26, 31, 46, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(244, 241, 234, 0.08);
+            z-index: 100;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--sand);
+            letter-spacing: -0.5px;
+        }
+
+        .logo span {
+            color: var(--rust);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-menu a {
+            color: var(--sand);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--rust);
+            transition: width 0.3s ease;
+        }
+
+        .nav-menu a:hover {
+            color: var(--rust);
+        }
+
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 8rem 0 6rem;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 720px;
+        }
+
+        .hero-tag {
+            display: inline-block;
+            padding: 0.5rem 1.2rem;
+            background: rgba(123, 165, 145, 0.15);
+            border: 1px solid rgba(123, 165, 145, 0.3);
+            border-radius: 30px;
+            color: var(--sage);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            letter-spacing: 0.5px;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -1.5px;
+            color: var(--off-white);
+        }
+
+        .hero h1 .highlight {
+            color: var(--rust);
+            position: relative;
+        }
+
+        .hero h1 .accent {
+            color: var(--sage);
+        }
+
+        .hero-description {
+            font-size: 1.15rem;
+            color: var(--sand);
+            margin-bottom: 3rem;
+            max-width: 580px;
+            line-height: 1.8;
+        }
+
+        .cta-group {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 0.9rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--rust);
+            color: var(--off-white);
+            box-shadow: 0 4px 14px rgba(217, 119, 87, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--terracotta);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(217, 119, 87, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--sand);
+            border: 1.5px solid rgba(244, 241, 234, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(244, 241, 234, 0.05);
+            border-color: var(--sage);
+            color: var(--sage);
+        }
+
+        /* Section Headings */
+        .section {
+            padding: 5rem 0;
+        }
+
+        .section-header {
+            margin-bottom: 3.5rem;
+        }
+
+        .section-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--rust);
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--off-white);
+            margin-bottom: 1rem;
+            letter-spacing: -0.5px;
+        }
+
+        .section-description {
+            font-size: 1.05rem;
+            color: var(--sand);
+            max-width: 600px;
+        }
+
+        /* Course Stack */
+        .stack-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stack-card {
+            background: rgba(42, 49, 66, 0.4);
+            border: 1px solid rgba(244, 241, 234, 0.08);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stack-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--rust), var(--gold));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+
+        .stack-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .stack-card:hover {
+            background: rgba(42, 49, 66, 0.7);
+            border-color: rgba(217, 119, 87, 0.3);
+            transform: translateY(-5px);
+        }
+
+        .stack-icon {
+            width: 55px;
+            height: 55px;
+            background: rgba(244, 241, 234, 0.05);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 1.3rem;
+            border: 1px solid rgba(244, 241, 234, 0.08);
+        }
+
+        .stack-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.6rem;
+            color: var(--off-white);
+            font-weight: 600;
+        }
+
+        .stack-card .level {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--sage);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stack-card p {
+            color: var(--sand);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .stack-card .card-link {
+            color: var(--rust);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: gap 0.3s ease;
+        }
+
+        .stack-card .card-link:hover {
+            gap: 0.8rem;
+        }
+
+        /* Projects Grid */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            background: rgba(42, 49, 66, 0.5);
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid rgba(244, 241, 234, 0.08);
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .project-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(217, 119, 87, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .project-thumbnail {
+            height: 200px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3.5rem;
+        }
+
+        .project-thumbnail::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(to top, rgba(26, 31, 46, 0.8), transparent);
+        }
+
+        .thumb-frontend {
+            background: linear-gradient(135deg, #d97757 0%, #c85d3c 100%);
+        }
+
+        .thumb-backend {
+            background: linear-gradient(135deg, #7ba591 0%, #5b9aa9 100%);
+        }
+
+        .thumb-fullstack {
+            background: linear-gradient(135deg, #a48cb5 0%, #7ba591 100%);
+        }
+
+        .thumb-design {
+            background: linear-gradient(135deg, #d4a574 0%, #d97757 100%);
+        }
+
+        .project-info {
+            padding: 1.8rem;
+        }
+
+        .project-tag {
+            display: inline-block;
+            padding: 0.35rem 0.9rem;
+            background: rgba(217, 119, 87, 0.15);
+            color: var(--rust);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .project-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.6rem;
+            color: var(--off-white);
+            font-weight: 600;
+        }
+
+        .project-card p {
+            color: var(--sand);
+            font-size: 0.92rem;
+            line-height: 1.6;
+            margin-bottom: 1.2rem;
+        }
+
+        .project-link {
+            color: var(--sage);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.3s ease;
+        }
+
+        .project-link:hover {
+            color: var(--ocean);
+            gap: 0.7rem;
+        }
+
+        /* Resources Section */
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.8rem;
+        }
+
+        .resource-card {
+            background: rgba(61, 67, 84, 0.3);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid rgba(244, 241, 234, 0.08);
+            border-left: 4px solid var(--sage);
+            transition: all 0.3s ease;
+        }
+
+        .resource-card:hover {
+            background: rgba(61, 67, 84, 0.5);
+            border-left-color: var(--rust);
+        }
+
+        .resource-card h4 {
+            font-size: 1.2rem;
+            margin-bottom: 0.8rem;
+            color: var(--off-white);
+        }
+
+        .resource-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .resource-card li {
+            padding: 0.5rem 0;
+            color: var(--sand);
+            font-size: 0.92rem;
+            padding-left: 1.2rem;
+            position: relative;
+        }
+
+        .resource-card li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--sage);
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 5rem;
+            padding: 3rem 0;
+            border-top: 1px solid rgba(244, 241, 234, 0.08);
+            text-align: center;
+        }
+
+        .footer-content {
+            color: var(--sand);
+            font-size: 0.9rem;
+        }
+
+        .footer-links {
+            margin-top: 1rem;
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+        }
+
+        .footer-links a {
+            color: var(--sage);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--rust);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1.5rem;
+            }
+
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+
+            .nav-menu {
+                display: none;
+            }
+
+            .cta-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .stack-grid,
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    fullstack<span> -RRK</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="#learning">Learning Path</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#resources">Resources</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero -->
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <span class="hero-tag">Complete Development Curriculum</span>
+                    <h1>
+                        Build the <span class="highlight">Full Stack</span><br>
+                        Frontend to <span class="accent">Backend</span>
+                    </h1>
+                    <p class="hero-description">
+                        A hands-on journey through modern web development. From crafting pixel-perfect interfaces to
+                        building robust server architectures—learn it all with real projects.
+                    </p>
+                    <div class="cta-group">
+                        <a href="#learning" class="btn btn-primary">Start Your Journey</a>
+                        <a href="#projects" class="btn btn-secondary">View Projects</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Learning Path -->
+        <section id="learning" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-label">// Learning Path</div>
+                    <h2 class="section-title">Master Every Layer of the Stack</h2>
+                    <p class="section-description">
+                        Structured modules covering frontend fundamentals, backend architecture, databases, and
+                        deployment strategies.
+                    </p>
+                </div>
+
+                <div class="stack-grid">
+                    <div class="stack-card">
+                        <div class="stack-icon">🌐</div>
+                        <h3>Web Fundamentals</h3>
+                        <div class="level">Foundation</div>
+                        <p>HTTP, DNS, browsers, developer tools, version control with Git, and how the internet actually
+                            works.</p>
+                        <a href="https://github.com/Raviranjan010/Web_Development_Notes/tree/main/00_Web_Fundamentals"
+                            class="card-link">
+                            Explore Fundamentals →
+                        </a>
+                    </div>
+
+                    <div class="stack-card">
+                        <div class="stack-icon">📐</div>
+                        <h3>HTML5 & Semantics</h3>
+                        <div class="level">Frontend Core</div>
+                        <p>Document structure, semantic elements, forms, accessibility best practices, and SEO-friendly
+                            markup.</p>
+                        <a href="https://github.com/Raviranjan010/Web_Development_Notes/tree/main/01_HTML"
+                            class="card-link">
+                            Learn HTML →
+                        </a>
+                    </div>
+
+                    <div class="stack-card">
+                        <div class="stack-icon">🎨</div>
+                        <h3>CSS3 & Design</h3>
+                        <div class="level">Frontend Core</div>
+                        <p>Flexbox, Grid, animations, responsive design, Tailwind, Bootstrap, and modern styling
+                            techniques.</p>
+                        <a href="https://github.com/Raviranjan010/Web_Development_Notes/tree/main/02_CSS"
+                            class="card-link">
+                            Master Styling →
+                        </a>
+                    </div>
+
+                    <div class="stack-card">
+                        <div class="stack-icon">⚡</div>
+                        <h3>JavaScript ES6+</h3>
+                        <div class="level">Frontend Logic</div>
+                        <p>Modern JavaScript, DOM manipulation, async/await, fetch API, modules, and functional
+                            programming.</p>
+                        <a href="https://github.com/Raviranjan010/Web_Development_Notes/tree/main/03_JavaScript"
+                            class="card-link">
+                            Code JavaScript →
+                        </a>
+                    </div>
+
+                    <!-- <div class="stack-card">
+                        <div class="stack-icon">⚛️</div>
+                        <h3>React & Frameworks</h3>
+                        <div class="level">Frontend Advanced</div>
+                        <p>Component-based architecture, state management, hooks, routing, and building scalable SPAs.
+                        </p>
+                        <a href="#" class="card-link">
+                            Coming Soon →
+                        </a>
+                    </div> -->
+
+                    <!-- <div class="stack-card">
+                        <div class="stack-icon">🔧</div>
+                        <h3>Node.js & Backend</h3>
+                        <div class="level">Backend Core</div>
+                        <p>Server-side JavaScript, Express.js, RESTful APIs, authentication, middleware, and
+                            error handling.</p>
+                        <a href="#" class="card-link">
+                            Coming Soon →
+                        </a>
+                    </div> -->
+
+                    <!-- <div class="stack-card">
+                        <div class="stack-icon">🗄️</div>
+                        <h3>Databases & SQL</h3>
+                        <div class="level">Backend Data</div>
+                        <p>PostgreSQL, MongoDB, database design, queries, indexing, relationships, and data modeling.
+                        </p>
+                        <a href="#" class="card-link">
+                            Coming Soon →
+                        </a>
+                    </div> -->
+
+                    <!-- <div class="stack-card">
+                        <div class="stack-icon">🚀</div>
+                        <h3>Deployment & DevOps</h3>
+                        <div class="level">Production</div>
+                        <p>Docker, CI/CD, cloud platforms, nginx, monitoring, logging, and shipping production apps.</p>
+                        <a href="#" class="card-link">
+                            Coming Soon →
+                        </a>
+                    </div> -->
+
+                    <div class="stack-card">
+                        <div class="stack-icon">📚</div>
+                        <h3>Quick Reference</h3>
+                        <div class="level">Revision</div>
+                        <p>Cheatsheets, interview prep, commonly asked questions, and last-minute reference guides.</p>
+                        <a href="https://github.com/Raviranjan010/Web_Development_Notes/tree/main/05_Revision"
+                            class="card-link">
+                            View Cheatsheets →
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects -->
+        <section id="projects" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-label">// Live Builds</div>
+                    <h2 class="section-title">Projects That Teach</h2>
+                    <p class="section-description">
+                        Real-world applications built from scratch. Each project reinforces core concepts and best
+                        practices.
+                    </p>
+                </div>
+
+                <div class="projects-grid">
+                    <div class="project-card">
+                        <div class="project-thumbnail thumb-frontend">👨‍💻</div>
+                        <div class="project-info">
+                            <span class="project-tag">HTML/CSS/JS</span>
+                            <h3>Developer Portfolio</h3>
+                            <p>A clean, responsive portfolio showcasing your work with smooth animations and interactive
+                                sections.</p>
+                            <a href="./Projects_Preview/portfolio/index.html" class="project-link" target="_blank">
+                                View Live Demo →
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="project-card">
+                        <div class="project-thumbnail thumb-design">🌍</div>
+                        <div class="project-info">
+                            <span class="project-tag">Bootstrap</span>
+                            <h3>Chrome Landing Clone</h3>
+                            <p>Pixel-perfect recreation of Google Chrome's homepage using Bootstrap grid system and
+                                components.</p>
+                            <a href="./Projects_Preview/chrome_clone/index.html" class="project-link" target="_blank">
+                                View Live Demo →
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="project-card">
+                        <div class="project-thumbnail thumb-fullstack">✍️</div>
+                        <div class="project-info">
+                            <span class="project-tag">Tailwind CSS</span>
+                            <h3>Modern Blog Platform</h3>
+                            <p>Utility-first design approach with Tailwind, featuring cards, typography, and responsive
+                                layouts.</p>
+                            <a href="./Projects_Preview/tailwind_blog/index.html" class="project-link" target="_blank">
+                                View Live Demo →
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="project-card">
+                        <div class="project-thumbnail thumb-backend">💼</div>
+                        <div class="project-info">
+                            <span class="project-tag">Bootstrap</span>
+                            <h3>Job Search Portal</h3>
+                            <p>Complete job listing dashboard with advanced filtering, search functionality, and clean
+                                UI.</p>
+                            <a href="./Projects_Preview/job_search_portal/index.html" class="project-link"
+                                target="_blank">
+                                View Live Demo →
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="project-card">
+                        <div class="project-thumbnail thumb-frontend">🛍️</div>
+                        <div class="project-info">
+                            <span class="project-tag">JavaScript</span>
+                            <h3>E-Commerce Store</h3>
+                            <p>Interactive shopping experience with product filtering, cart management, and dynamic
+                                pricing.</p>
+                            <a href="./Projects_Preview/ecommerce/index.html" class="project-link" target="_blank">
+                                View Live Demo →
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="project-card">
+                        <div class="project-thumbnail thumb-fullstack">💡</div>
+                        <div class="project-info">
+                            <span class="project-tag">Bootstrap</span>
+                            <h3>InnoCascade Platform</h3>
+                            <p>Modern business landing page with scroll animations, testimonials, and conversion-focused
+                                design.</p>
+                            <a href="./Projects_Preview/innocascade/index.html" class="project-link" target="_blank">
+                                View Live Demo →
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Resources -->
+        <section id="resources" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-label">// Resources</div>
+                    <h2 class="section-title">Keep Learning</h2>
+                </div>
+
+                <div class="resources-grid">
+                    <div class="resource-card">
+                        <h4>Documentation</h4>
+                        <ul>
+                            <li>Course README & Getting Started</li>
+                            <li>Setup Guide & Prerequisites</li>
+                            <li>Project Structure Overview</li>
+                        </ul>
+                    </div>
+
+                    <div class="resource-card">
+                        <h4>Practice</h4>
+                        <ul>
+                            <li>Coding Challenges</li>
+                            <li>Interview Questions</li>
+                            <li>Algorithm Practice</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2026 Fullstack Development Journey — Built with dedication for learners</p>
+                <div class="footer-links">
+                    <a href="https://github.com/Raviranjan010/Web_Development_Notes">Documentation</a>
+                    <a href="https://github.com/Raviranjan010/">GitHub</a>
+                    <!-- <a href="#">Feedback</a> -->
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>
