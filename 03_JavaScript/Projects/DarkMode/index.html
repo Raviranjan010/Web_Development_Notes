@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dark Mode Toggle Project</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <div class="container header-content">
+            <h1>Theme Switcher</h1>
+
+            <!-- Toggle Switch -->
+            <div class="theme-switch-wrapper">
+                <label class="theme-switch" for="checkbox">
+                    <input type="checkbox" id="checkbox" />
+                    <div class="slider round"></div>
+                </label>
+                <em id="mode-label">Enable Dark Mode!</em>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="card">
+            <h2>Why Dark Mode?</h2>
+            <p>
+                Dark mode reduces the light emitted by device screens while maintaining the minimum color contrast
+                ratios required for readability.
+            </p>
+            <ul>
+                <li>Reduces eye strain</li>
+                <li>Saves battery life (OLED screens)</li>
+                <li>Looks aesthetically pleasing</li>
+            </ul>
+            <button class="btn">Read More</button>
+        </section>
+
+        <section class="card">
+            <h2>How it Works</h2>
+            <p>
+                We use JavaScript to toggle a specific class (<code>.dark-mode</code>) on the <code>&lt;body&gt;</code>
+                element. CSS Variables update automatically when this class is applied.
+            </p>
+            <p>
+                We also use <strong>LocalStorage</strong> to remember your preference when you refresh the page!
+            </p>
+            <button class="btn btn-secondary">View Code</button>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

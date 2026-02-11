@@ -27,9 +27,28 @@ Every standard HTML5 document follows this template:
 
 ## 4. Detailed Explanation
 
-### 1. `<!DOCTYPE html>`
-- **Role**: Tells the browser "This is standard HTML5".
-- **Must handle**: It prevents the browser from switching to "Quirks Mode" (an old compatibility mode that can break layouts).
+### 1. `<!DOCTYPE html>` - The Declaration
+It is an instruction to the web browser about what version of HTML the page is written in.
+- **This is NOT a tag**, but a declaration.
+- It must be the very first line of your HTML file.
+- It is **case-insensitive** (e.g., `<!doctype html>` works too).
+
+#### Why is it important?
+Without `<!DOCTYPE html>`, browsers may switch to **Quirks Mode**.
+- **Standards Mode**: The browser renders the page according to modern web standards.
+- **Quirks Mode**: The browser emulates old behavior (bugs included) to support legacy websites from the 90s. This causes layout issues and makes debugging a nightmare.
+
+#### Historical DOCTYPEs (FYI)
+You will only use `<!DOCTYPE html>` (HTML5), but here is what we used to type:
+
+| Version | Declaration |
+| :--- | :--- |
+| **HTML 5** | `<!DOCTYPE html>` |
+| **HTML 4.01 Strict** | `<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" ...>` |
+| **XHTML 1.0 Strict** | `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" ...>` |
+
+#### Best Practice
+Always use `<!DOCTYPE html>` for every new project. It is short, easy to remember, and triggers Standards Mode in all browsers.
 
 ### 2. `<html lang="en">`
 - **Role**: The container for everything.

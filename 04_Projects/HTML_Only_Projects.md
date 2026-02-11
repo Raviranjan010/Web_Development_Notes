@@ -53,3 +53,27 @@ Build these projects using **pure HTML**. No CSS (or very minimal inline styles 
 - Semantic HTML (`<nav>`, `<main>`, `<section>`, `<header>`)
 - Internal Linking (`href="#topic"`)
 - Preformatted Text (`<pre>`)
+
+---
+
+## Assignment 1: Build a Survey Form
+*Try it on your own!*
+
+**Objective**: Create a clean, structured form to collect user feedback.
+1.  **Interface**: Design a clean form with text fields, checkboxes, and radio buttons.
+2.  **Structure**: Organize the form logically.
+3.  **Data**: Collect Name, Age, Preferences, and Feedback.
+4.  **Responsive**: Use proper semantic tags (no CSS needed yet).
+
+*If you get stuck, check the solution:* [02_HTML_Survey_System.md](./02_HTML_Survey_System.md)
+
+---
+
+## Assignment 2: Create a Landing Page
+**Objective**: Build a single-page layout to introduce a product or personal brand.
+1.  **Goal**: Encourage user interaction (Newsletter signup, Download link).
+2.  **Tech Stack**: Pure HTML.
+3.  **Structure**: Use `<header>`, `<section>`, `<main>`, `<footer>`.
+4.  **Focus**: Clarity and Layout.
+
+*Great! If you’ve completed both assignments, you now have the confidence to move forward and learn HTML and CSS more effectively.*

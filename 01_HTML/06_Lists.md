@@ -65,26 +65,52 @@ Lists inside lists.
 ```
 
 ### Formatting Ordered Lists (Attributes)
-- `type`: Changes the marker type (`1`, `A`, `a`, `I`, `i`).
-- `start`: Changes the starting number.
-- `reversed`: Reverses the numbering order.
+You can customize the numbering using these attributes:
 
-```html
-<ol type="A" start="3">
-  <li>Item C (Starts at 3rd letter)</li>
-  <li>Item D</li>
-</ol>
-```
+1.  **`reversed`**: Reverses the numbering order (e.g., 3, 2, 1).
+    ```html
+    <ol reversed>
+      <li>HTML</li>
+      <li>CSS</li>
+      <li>JS</li>
+    </ol>
+    ```
+
+2.  **`start`**: Specifies the starting number.
+    ```html
+    <ol start="5">
+      <li>Item 5</li>
+      <li>Item 6</li>
+    </ol>
+    ```
+
+3.  **`type`**: Changes the marker type.
+    - `1`: Numbers (Default)
+    - `A`: Uppercase Letters
+    - `a`: Lowercase Letters
+    - `I`: Uppercase Roman Numerals
+    - `i`: Lowercase Roman Numerals
+    ```html
+    <ol type="i">
+      <li>Introduction</li>
+      <li>Main Content</li>
+    </ol>
+    
+    ```
 
 ### Description List (`<dl>`)
-Less common, but useful for glossaries.
+A description list is a list of terms, with a description of each term. Useful for glossaries or key-value pairs.
+
+- `<dl>`: Defines the description list.
+- `<dt>`: Defines the term/name.
+- `<dd>`: Describes the term.
+
 ```html
 <dl>
-  <dt>HTML</dt>
-  <dd>HyperText Markup Language</dd>
-
-  <dt>CSS</dt>
-  <dd>Cascading Style Sheets</dd>
+  <dt>Coffee</dt>
+  <dd>- 500 gms</dd>
+  <dt>Milk</dt>
+  <dd>- 1 ltr Tetra Pack</dd>
 </dl>
 ```
 

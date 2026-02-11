@@ -99,6 +99,19 @@ Don't use `div` for everything.
 ### 9. Validate Your Code
 Use the [W3C Markup Validation Service](https://validator.w3.org/) to find syntax errors you missed.
 
+### 10. How to View Source Code
+You can learn a lot by looking at how other websites are built.
+
+#### Method 1: View Page Source (Raw HTML)
+1.  Right-click anywhere on the page.
+2.  Select **View Page Source** (or press `Ctrl + U`).
+3.  This shows the raw HTML file sent by the server.
+
+#### Method 2: Inspect Element (The Developer Tool)
+1.  Right-click on a specific element (like a button or image).
+2.  Select **Inspect** (or press `Ctrl + Shift + I` / `F12`).
+3.  This opens **Chrome DevTools**. It shows the **Computed DOM** (how the browser actually sees the page after fixing errors and running JavaScript). This is much more useful!
+
 ## 4. Summary Checklist
 - [ ] `<!DOCTYPE html>` at the top?
 - [ ] `<html lang="en">` present?

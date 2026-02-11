@@ -1,85 +1,80 @@
 # 2.7 CSS Flexbox
 
-## 1. What is it?
-**Flexbox** (Flexible Box Layout) is a one-dimensional layout module. It is designed to lay out items in rows OR columns.
+## 1. What is Flexbox?
+The **Flexible Box Layout (Flexbox)** is a one-dimensional layout system. It handles space distribution and item alignment in a Row or Column.
 
-## 2. Why it is used?
-Before Flexbox, centering content or distributing space evenly between items was a nightmare (using `float`, `inline-block`, or tables). Flexbox makes alignment and spacing trivial.
+### Components
+1.  **Flex Container**: The parent wrapper (`display: flex`).
+2.  **Flex Items**: The direct children inside the container.
 
-## 3. Syntax / Structure
-You activate Flexbox on a **container** (parent), and it automatically affects its **items** (direct children).
-```css
-.container {
-    display: flex; /* Magic happens here */
-}
-```
+### Axes
+- **Main Axis**: The primary direction (Row by default).
+- **Cross Axis**: Perpendicular to the main axis (Column by default).
 
-## 4. Detailed Explanation
+---
 
-### Parent Properties (The Container)
-1.  **`flex-direction`**: Row (default) or Column?
-    - `row` | `column` | `row-reverse` | `column-reverse`
-2.  **`justify-content`**: Alignment along the **Main Axis** (Horizontal for row).
-    - `flex-start` (Left) | `center` | `flex-end` (Right) | `space-between` | `space-around`
-3.  **`align-items`**: Alignment along the **Cross Axis** (Vertical for row).
-    - `stretch` (Default) | `flex-start` (Top) | `center` | `flex-end` (Bottom) | `baseline`
-4.  **`flex-wrap`**: Should items wrap to the next line if they run out of space?
-    - `nowrap` (Default) | `wrap`
+## 2. Flex Attributes
 
-### Child Properties (The Items)
-1.  **`flex-grow`**: Should this item grow to fill extra space? (Default 0).
-2.  **`flex-shrink`**: Should this item shrink if space is tight? (Default 1).
-3.  **`flex-basis`**: What is the ideal starting size? (like width).
+### 1. `flex-direction`
+Controls the Main Axis.
+- `row`: Default. Left to Right.
+- `row-reverse`: Right to Left.
+- `column`: Top to Bottom.
+- `column-reverse`: Bottom to Top.
 
-## 5. Examples
+### 2. `justify-content`
+Aligns items along the **Main Axis**.
+- `flex-start`: Start of axis.
+- `center`: Center.
+- `space-between`: Space between items.
+- `space-around`: Space around items.
 
-### The Holy Grail: Perfect Centering
-```css
-.container {
-    display: flex;
-    justify-content: center; /* Horizontally center */
-    align-items: center;     /* Vertically center */
-    height: 100vh;           /* Full screen height */
-}
-```
+### 3. `align-items`
+Aligns items along the **Cross Axis**.
+- `stretch`: Default. Stretches to fill height.
+- `center`: Center vertically.
+- `flex-start` / `flex-end`.
 
-### Navigation Bar
-Items spread out, with Logo on left and Links on right? Easy.
+### 4. `flex-wrap`
+- `nowrap`: Default. All items in one line.
+- `wrap`: Items wrap to next line if needed.
+
+---
+
+## 3. Examples
+
+### 1. Simple Navigation Bar
 ```css
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem;
+    background-color: #333;
+    padding: 10px;
+}
+.navbar a {
+    color: white;
+    text-decoration: none;
 }
 ```
 
-### Responsive Column Layout
+### 2. Responsive Flex Layout
+Automatically switches from Row to Column on small screens.
+
 ```css
-.card-container {
+.container {
     display: flex;
-    flex-wrap: wrap; /* Allows items to drop to next line */
-    gap: 20px;       /* Space between items */
+    flex-wrap: wrap; /* Allow wrapping */
 }
 
-.card {
-    flex: 1 1 300px; /* Grow: 1, Shrink: 1, Basis: 300px */
+.item {
+    flex: 1 1 200px; /* Grow, Shrink, Basis */
+    margin: 10px;
+}
+
+@media (max-width: 600px) {
+    .container {
+        flex-direction: column; /* Stack vertically on mobile */
+    }
 }
 ```
-*This says: "I want cards to be at least 300px wide, but grow if there's room."*
-
-## 6. Key Points to Remember
-- Flexbox is **1D** (One-Dimensional). It handles rows OR columns, but not complex 2D grids (use CSS Grid for that).
-- `justify-content` aligns along the direction you set. If `flex-direction: column`, standard justification works vertically!
-- `gap` property (modern CSS) works in Flexbox to create space between items without using margins.
-
-## 7. Common Mistakes
-- **Mistake**: Forgetting `display: flex` on the parent.
-- **Mistake**: Trying to use `vertical-align` inside a flex container. It has no effect; use `align-items` instead.
-
-## 8. Pro Tips / Tricks
-- **`margin: auto` magic**: Inside a flex container, setting `margin-left: auto` on an item pushes it all the way to the right. This is great for navbars (e.g., pushing the "Login" button to the far right).
-
-## 9. Related Topics
-- [08_Grid.md](./08_Grid.md) - For 2D layouts.
-- [../01_HTML/09_Semantic_HTML.md](../01_HTML/09_Semantic_HTML.md) - Structure your flex containers semantically.

@@ -8,6 +8,12 @@ This repository contains a complete, beginner-to-advanced curriculum for masteri
 
 The notes are organized into the following modules:
 
+### 📁 [00_Web_Fundamentals](./00_Web_Fundamentals/)
+Start here! Understand how the web works.
+- Week 1 Roadmap
+- How Browsers, Servers, and DNS work
+- Git & Version Control Basics
+
 ### 📁 [01_HTML](./01_HTML/)
 Master the structure of the web.
 - Introduction to HTML

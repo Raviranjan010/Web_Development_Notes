@@ -1,24 +1,30 @@
 # 2.3 CSS Selectors
 
 ## 1. What is it?
-Selectors are patterns used to **select** the HTML elements you want to style. They are the heart of CSS.
+Selectors are patterns used to **target** the HTML elements you want to style. They are the heart of CSS.
+- Selectors can target elements by tag, class, or ID.
+- Combinators allow selecting elements based on hierarchy.
+- Attribute selectors target elements with specific attributes.
+- Pseudo-classes style elements in a particular state.
 
 ## 2. Why it is used?
-Without selectors, you couldn't tell the browser *which* paragraph to make red or *which* image to resize.
+Without selectors, you couldn't tell the browser *which* paragraph to make red or *which* image to resize. Efficient use of selectors leads to clean, maintainable, and scalable CSS.
 
-## 3. Syntax / Structure
-```css
-selector {
-  property: value;
-}
-```
+## 3. Types of Selectors
+1.  **Simple Selectors**: Match by name, id, or class (`div`, `#header`, `.btn`).
+2.  **Combinator Selectors**: Match based on relationship (`div p`, `div > p`).
+3.  **Pseudo-class Selectors**: Match a state (`:hover`, `:first-child`).
+4.  **Pseudo-elements Selectors**: Style a specific part (`::first-line`, `::after`).
+5.  **Attribute Selectors**: Match elements with specific attributes (`[type="text"]`).
+
+---
 
 ## 4. Detailed Explanation
 
 ### Basic Selectors
 1.  **Universal Selector (`*`)**: Selects ALL elements.
 2.  **Element/Type Selector (`tagname`)**: Selects all elements of that type (e.g., `p`, `div`).
-3.  **Class Selector (`.classname`)**: Selects elements with a specific class attribute.
+3.  **Class Selector (`.classname`)**: Selects elements with a specific class.
 4.  **ID Selector (`#idname`)**: Selects a single element with a specific ID.
 
 ### Combinators (Relationships)
@@ -29,6 +35,8 @@ selector {
 
 ### Grouping
 You can give the same style to multiple selectors by separating them with commas.
+
+---
 
 ## 5. Examples
 
@@ -56,7 +64,7 @@ p {
 }
 ```
 
-### Grouping Seletors
+### Grouping Selectors
 ```css
 h1, h2, h3 {
     font-family: Arial, sans-serif;
@@ -91,6 +99,8 @@ a[href^="https"] {
 }
 ```
 
+---
+
 ## 6. Key Points to Remember
 - **Specificity Wars**:
   - `*` (Least specific)
@@ -116,5 +126,5 @@ a[href^="https"] {
   ```
 
 ## 9. Related Topics
-- [13_Pseudo_Classes_and_Elements.md](./13_Pseudo_Classes_and_Elements.md) - Advanced selectors like `:hover` and `::before`.
-- [../01_HTML/11_HTML_Attributes.md](../01_HTML/11_HTML_Attributes.md) - Understanding attributes to target them.
+- [13_Pseudo_Classes_and_Elements.md](./13_Pseudo_Classes_and_Elements.md) - Deep dive into advanced selectors.
+- [../01_HTML/11_HTML_Attributes.md](../01_HTML/11_HTML_Attributes.md) - Understanding attributes.

@@ -1,16 +1,15 @@
 # 3.4 Control Flow (Conditionals)
 
 ## 1. What is it?
-Control flow determines which blocks of code are executed based on conditions. It allows your program to make decisions.
+Control flow statements in JavaScript control the order in which code is executed. These statements allow you to make decisions, repeat tasks, and jump between parts of a program based on specific conditions.
 
 ## 2. Why it is used?
 Programs aren't useful if they do the exact same thing every time.
-- *"If the user is logged in, show profile. Else, show login button."*
-- *"If score > 50, you win."*
+- **Decision-Making**: To execute specific blocks of code based on conditions (e.g., if, if...else).
+- **Branching**: To exit loops or skip iterations (break, continue).
+- **Switching**: To handle multiple conditions effectively (switch).
 
 ## 3. Syntax / Structure
-Common structures: `if-else`, `switch`, and `ternary`.
-
 ```javascript
 if (condition) {
     // Code if true
@@ -21,68 +20,74 @@ if (condition) {
 
 ## 4. Detailed Explanation
 
-### If...Else
-The standard way to make decisions.
-- `if`: Starts the check.
-- `else if`: Checks another condition if the first one failed.
-- `else`: Runs if NONE of the above were true.
+### 1. `if` Statement
+Executes a block of code **only** if a specified condition is true.
 
-### Switch Statement
-Useful when checking **one** variable against **many** possible values (e.g., checking user role: 'admin', 'editor', 'guest').
+### 2. `if...else` Statement
+Provides an alternate block of code to execute if the condition is false.
 
-### Ternary Operator
-A shortcut for simple if-else statements.
-`condition ? trueCode : falseCode`
+### 3. `if...else if...else` Statement
+Used when you want to handle multiple conditions sequentially.
+
+### 4. `switch` Statement
+Evaluates an expression and executes a block of code based on matching cases. It provides an alternative to long `if-else` chains.
+
+### 5. Ternary Operator
+A shorthand for simple if-else statements: `condition ? true : false`.
 
 ## 5. Examples
 
-### Basic If-Else
+### 1. Categorize a Score (If-Else If)
 ```javascript
-let hour = 14; // 2 PM
-
-if (hour < 12) {
-    console.log("Good Morning");
-} else if (hour < 18) {
-    console.log("Good Afternoon");
-} else {
-    console.log("Good Evening");
+function categorizeGrade(score) {
+    if (score >= 90) {
+        console.log("Grade: A");
+    } else if (score >= 80) {
+        console.log("Grade: B");
+    } else if (score >= 70) {
+        console.log("Grade: C");
+    } else {
+        console.log("Grade: D");
+    }
 }
+categorizeGrade(85); // Output: Grade: B
 ```
 
-### Switch Statement
+### 2. Identify Weekday or Weekend (Switch)
 ```javascript
-let day = 3;
-
-switch (day) {
-    case 1:
-        console.log("Monday");
-        break; // Stops execution here
-    case 2:
-        console.log("Tuesday");
-        break;
-    case 3:
-        console.log("Wednesday");
-        break;
-    default:
-        console.log("Invalid Day");
+function checkDay(day) {
+    switch (day) {
+        case "Monday":
+        case "Tuesday":
+        case "Wednesday":
+        case "Thursday":
+        case "Friday":
+            console.log("Weekday");
+            break;
+        case "Saturday":
+        case "Sunday":
+            console.log("Weekend");
+            break;
+        default:
+            console.log("Invalid Day");
+    }
 }
+checkDay("Sunday"); // Output: Weekend
 ```
 
-### Ternary Operator (One-Liner)
+### 3. Ternary Operator
 ```javascript
-let age = 20;
-let canVote = age >= 18 ? "Yes" : "No";
-console.log(canVote); // "Yes"
+let a = 10;
+console.log(a === 5 ? "a is equal to 5" : "a is not equal to 5");
 ```
 
 ## 6. Key Points to Remember
-- **Break Command**: In a `switch` statement, if you forget `break`, the code "falls through" and executes the next case too, even if it doesn't match!
-- **Truthiness**: In JS, values like `0`, `""` (empty string), `null`, `undefined`, and `NaN` are considered **falsy**. Everything else is **truthy**.
+- **Break Command**: In a `switch` statement, if you forget `break`, the code "falls through" and executes the next case too.
+- **Truthiness**: `0`, `""`, `null`, `undefined`, `NaN` are **falsy**. Everything else is **truthy**.
 
 ## 7. Common Mistakes
 - **Mistake**: Using `=` instead of `===` in the condition.
-  `if (x = 10)` assigns 10 to x and runs the block.
-- **Mistake**: Not accounting for all edge cases (e.g., what if `hour` is exactly 12?).
+- **Mistake**: Not accounting for all edge cases (e.g., what if `score` is negative?).
 
 ## 8. Pro Tips / Tricks
 - **Early Return**: Instead of nesting huge if-else blocks inside a function, check for the negative case first and return.
@@ -92,7 +97,12 @@ console.log(canVote); // "Yes"
       // ... continue logic
   }
   ```
+- **Object Lookup**: Sometimes an object map is cleaner than a switch statement.
+  ```javascript
+  const roles = { admin: "Mega Access", editor: "Edit Access" };
+  console.log(roles[userRole] || "No Access");
+  ```
 
 ## 9. Related Topics
 - [03_Operators.md](./03_Operators.md) - Using `&&` and `||` in conditions.
-- [09_Loops.md](./09_Loops.md) - Repeating code based on conditions.
+- [05_Loops.md](./05_Loops.md) - Repeating code based on conditions.

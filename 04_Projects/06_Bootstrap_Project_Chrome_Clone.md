@@ -1,0 +1,171 @@
+# 4.5 Project: Google Chrome Clone (Bootstrap)
+
+## 1. Objective
+Replicate the **Google Chrome New Tab Page** using **Bootstrap 5**.
+This project tests your ability to use:
+-   **Navbar** for the top links (Gmail, Images).
+-   **Flexbox Utilities** for centering content.
+-   **Grid System** for layout.
+-   **Bootstrap Icons** for search and menu icons.
+
+## 2. Project Source Code
+
+### HTML (`index.html`)
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Chrome Clone</title>
+    <!-- 1. Include Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 2. Include Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    <style>
+        /* Custom Overrides for that perfect Google look */
+        body {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .navbar-link {
+            text-decoration: none;
+            color: #333;
+            font-size: 0.85rem;
+        }
+        .navbar-link:hover {
+            text-decoration: underline;
+        }
+        .google-logo {
+            max-width: 272px;
+            margin-bottom: 20px;
+        }
+        .search-container {
+            max-width: 584px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        .search-input-group {
+            border-radius: 24px;
+            border: 1px solid #dfe1e5;
+            padding: 5px 15px;
+            transition: box-shadow 0.2s;
+        }
+        .search-input-group:hover, .search-input-group:focus-within {
+            box-shadow: 0 1px 6px rgba(32,33,36,0.28);
+            border-color: rgba(223,225,229,0);
+        }
+        .search-input {
+            border: none;
+            outline: none;
+            width: 100%;
+        }
+        .btn-google {
+            background-color: #f8f9fa;
+            border: 1px solid #f8f9fa;
+            border-radius: 4px;
+            color: #3c4043;
+            font-size: 14px;
+            margin: 11px 4px;
+            padding: 0 16px;
+            line-height: 27px;
+            height: 36px;
+            min-width: 54px;
+            text-align: center;
+            cursor: pointer;
+            user-select: none;
+        }
+        .btn-google:hover {
+            box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+            border: 1px solid #dadce0;
+            color: #202124;
+        }
+        .customize-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            border-radius: 20px;
+            background-color: #fff; /* Changed to white for better visibility */
+            border: 1px solid white; /* clean look */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVIGATION BAR -->
+    <nav class="navbar navbar-light p-3">
+        <div class="container-fluid justify-content-end">
+            <div class="d-flex align-items-center gap-3">
+                <a href="#" class="navbar-link">Gmail</a>
+                <a href="#" class="navbar-link">Images</a>
+                <!-- App Icon -->
+                <a href="#" class="text-dark"><i class="bi bi-grid-3x3-gap-fill fs-5"></i></a>
+                <!-- Sign In Button -->
+                <button class="btn btn-primary btn-sm px-4 rounded-1">Sign in</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-grow-1 d-flex flex-column align-items-center justify-content-center mb-5">
+        
+        <!-- Logo -->
+        <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="Google" class="google-logo img-fluid">
+
+        <!-- Search Bar -->
+        <div class="search-container">
+            <div class="search-input-group d-flex align-items-center">
+                <i class="bi bi-search text-secondary me-3"></i>
+                <input type="text" class="search-input" placeholder="Search Google or type a URL">
+                <i class="bi bi-mic-fill text-primary ms-3" style="cursor: pointer;"></i>
+                <i class="bi bi-camera-fill text-secondary ms-3" style="cursor: pointer;"></i>
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="mt-4 d-flex justify-content-center gap-2">
+            <button class="btn-google">Google Search</button>
+            <button class="btn-google">I'm Feeling Lucky</button>
+        </div>
+
+        <!-- Customize Button (Bottom Right) -->
+        <div class="customize-btn p-2 text-secondary cursor-pointer">
+            <i class="bi bi-pencil-fill me-1"></i> Customize Chrome
+        </div>
+
+    </main>
+
+    <!-- FOOTER (Optional for realism) -->
+    <footer class="bg-light w-100 mt-auto">
+        <div class="container-fluid py-3 px-4 border-top">
+            <div class="row text-secondary" style="font-size: 0.9rem;">
+                <div class="col-md-6 d-flex gap-3 justify-content-center justify-content-md-start">
+                    <a href="#" class="text-decoration-none text-secondary">About</a>
+                    <a href="#" class="text-decoration-none text-secondary">Advertising</a>
+                    <a href="#" class="text-decoration-none text-secondary">Business</a>
+                    <a href="#" class="text-decoration-none text-secondary">How Search works</a>
+                </div>
+                <div class="col-md-6 d-flex gap-3 justify-content-center justify-content-md-end mt-2 mt-md-0">
+                    <a href="#" class="text-decoration-none text-secondary">Privacy</a>
+                    <a href="#" class="text-decoration-none text-secondary">Terms</a>
+                    <a href="#" class="text-decoration-none text-secondary">Settings</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+```
+
+## 3. Explanation
+
+1.  **CDN Links**: We included Bootstrap CSS, JS, and **Bootstrap Icons** via `cdn.jsdelivr.net`.
+2.  **`d-flex`**: Used extensively to center the logo and search bar vertically (`flex-column`, `justify-content-center`).
+3.  **`gap-3`**: A Bootstrap utility to add space between flex items (Gmail, Images, Icon).
+4.  **Custom CSS**: While Bootstrap handles layout, we added custom CSS for the exact Google look (rounded search bar, specific button colors).

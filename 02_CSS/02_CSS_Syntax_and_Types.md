@@ -1,91 +1,100 @@
 # 2.2 CSS Syntax and Types
 
-## 1. What is it?
-This topic covers **where** you can write CSS and **how** the browser decides which styles to apply.
+## 1. Overview
+There are three ways to apply CSS to HTML. Each method serves a different purpose based on how you organize and manage your styles.
 
-## 2. Why it is used?
-Understanding the three implementation methods helps you organize your project correctly.
+## 2. CSS Syntax (The Rules)
+The CSS syntax defines how CSS rules are written so that browsers can interpret them.
 
-## 3. Syntax / Structure
-There are three ways to insert CSS:
-1.  **Inline CSS**
-2.  **Internal CSS**
-3.  **External CSS**
+```css
+h1 {
+    color: blue;
+    font-size: 24px;
+}
+```
 
-## 4. Detailed Explanation
+### Components
+1.  **Selector**: Targets the HTML element (e.g., `h1`).
+2.  **Declaration Block**: Enclosed in curly braces `{ }`. It contains one or more declarations.
+3.  **Property**: The style attribute you want to change (e.g., `color`).
+4.  **Value**: The setting for that property (e.g., `blue`).
+5.  **Separator**: Properties and values are separated by a colon `:`, and declarations are ended with a semicolon `;`.
+
+---
+
+## 3. The Three Methods
 
 ### 1. Inline CSS
-Styles are applied directly to the HTML element using the `style` attribute.
-- **Pros**: Quick for testing.
-- **Cons**: Nightmare to maintain. **Avoid using this.**
+Applies styles directly within HTML tags using the `style` attribute.
+- **Use Case**: Small-scale styling, testing, or email templates.
+- **Disadvantage**: Hard to maintain, no reusability.
+
+```html
+<!DOCTYPE html>
+<html>
+<head> <title>Inline CSS</title> </head>
+<body>
+    <h2 style="color: green;">
+          Welcome to <i style="color: green;">innocascade</i>
+      </h2>
+</body>
+</html>
+```
 
 ### 2. Internal CSS
-Styles are written inside specific `<style>` tags within the HTML `<head>`.
-- **Pros**: Good for single-page websites.
-- **Cons**: Cannot reuse styles across multiple pages.
+Styles are written inside `<style>` tags within the `<head>` section.
+- **Use Case**: Single-page websites or unique styles for one specific page.
+- **Disadvantage**: Styles are not reusable on other pages.
 
-### 3. External CSS
-Styles are written in a separate `.css` file and linked in the HTML `<head>`.
-- **Pros**: The Gold Standard. One file controls the look of the entire website. Caches well in browsers.
-- **Cons**: Requires an extra HTTP request (negligible today).
-
-## 5. Examples
-
-### Inline CSS (Avoid)
 ```html
-<h1 style="color: blue; text-align: center;">Hello</h1>
-```
-
-### Internal CSS
-```html
+<!DOCTYPE html>
+<html>
 <head>
+    <title>Internal CSS</title>
     <style>
-        body {
-            background-color: linen;
-        }
-        h1 {
-            color: maroon;
-        }
+        h2 { color: green; }
     </style>
 </head>
+<body>
+    <h2>Welcome to innocascade</h2>
+</body>
+</html>
 ```
 
-### External CSS (Recommended)
+### 3. External CSS
+Styles are written in a separate `.css` file and linked using the `<link>` tag.
+- **Use Case**: Large projects, multi-page websites.
+- **Advantage**: Organize code, maintain consistency, and improve performance (caching).
+
 **index.html**:
 ```html
+<!DOCTYPE html>
+<html>
 <head>
+    <title>External CSS</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+<body>
+    <h2>Welcome to innocascade</h2>
+</body>
+</html>
 ```
+
 **styles.css**:
 ```css
-body {
-    background-color: linen;
-}
-h1 {
-    color: maroon;
+h2 {
+    color: green;
 }
 ```
 
-### The Cascade (Brief Intro)
-If you have the same rule in all three places, which one wins?
-**Priority Order (Highest to Lowest):**
-1.  **Inline Styles**
-2.  **External and Internal Styles** (whichever is last in the `<head>`)
-3.  **Browser Defaults**
+---
 
-## 6. Key Points to Remember
-- Always use **External CSS** for real projects.
-- `<link>` goes inside `<head>`.
-- Inline styles have the highest "Specificty" (power) unless `!important` is used.
+## 3. Best Practices (Comparison)
 
-## 7. Common Mistakes
-- **Mistake**: Writing CSS in the `<body>` tag using `<style>`. It works, but it's invalid HTML. Keep it in the `<head>`.
-- **Mistake**: Forgetting to link the CSS file.
+| Method | Reusability | Maintenance | Recommended For |
+| :--- | :--- | :--- | :--- |
+| **Inline** | ❌ None | ❌ Difficult | Quick fixes, Email templates |
+| **Internal** | ⚠️ Single Page | ⚠️ Medium | Single-page apps, Landing pages |
+| **External** | ✅ High | ✅ Easy | **Everything else (Standard)** |
 
-## 8. Pro Tips / Tricks
-- **Linking Order**: If you link two CSS files, the second one can override the first one. This is how libraries like Bootstrap work—you link Bootstrap first, then your custom CSS to override it.
-
-## 9. Related Topics
-- [03_Selectors.md](./03_Selectors.md) - How to target elements.
-- [../01_HTML/02_HTML_Document_Structure.md](../01_HTML/02_HTML_Document_Structure.md) - Where the `<link>` tag lives.
+**Recommendation**: Always use **External CSS** for real-world projects to keep your HTML clean and your styles organized.
