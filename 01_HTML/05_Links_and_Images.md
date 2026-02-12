@@ -1,4 +1,4 @@
-# 1.5 Links and Images
+# 1.5 Links and Images!
 
 ## 1. What is it?
 - **Links (Anchors)** allow users to navigate from one page to another or to a specific part of the same page.
