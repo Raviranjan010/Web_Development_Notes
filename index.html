@@ -1,854 +1,1132 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fullstack Development Journey!</title>
+    <title>RRK — Fullstack Journey</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            /* Warm, earthy palette with tech accents */
-            --deep-navy: #1a1f2e;
-            --slate: #2a3142;
-            --warm-gray: #3d4354;
-            --cream: #f4f1ea;
-            --sand: #e8dcc4;
-            --rust: #d97757;
-            --terracotta: #c85d3c;
-            --sage: #7ba591;
-            --ocean: #5b9aa9;
-            --lavender: #a48cb5;
-            --gold: #d4a574;
-            --off-white: #fafaf8;
+            --ink: #0d0f14;
+            --ink-2: #1a1d26;
+            --ink-3: #252933;
+            --glass: rgba(255,255,255,0.04);
+            --glass-border: rgba(255,255,255,0.07);
+            --white: #f5f4f0;
+            --muted: #8a8f9e;
+            --accent-lime: #c6f135;
+            --accent-blue: #4d9fff;
+            --accent-amber: #ffc453;
+            --accent-red: #ff6b6b;
+            --accent-teal: #3ecfcf;
+            --grad-1: linear-gradient(135deg, #c6f135, #3ecfcf);
+            --grad-2: linear-gradient(135deg, #ff6b6b, #ffc453);
         }
+
+        html { scroll-behavior: smooth; }
 
         body {
-            font-family: 'Space Grotesk', sans-serif;
-            background: linear-gradient(135deg, var(--deep-navy) 0%, #252b3d 100%);
-            color: var(--cream);
-            line-height: 1.7;
+            font-family: 'DM Sans', sans-serif;
+            background: var(--ink);
+            color: var(--white);
             overflow-x: hidden;
+            cursor: none;
         }
 
-        /* Subtle background texture */
+        /* ── Custom Cursor ── */
+        #cursor {
+            position: fixed; top: 0; left: 0; z-index: 9999;
+            pointer-events: none;
+        }
+        .cursor-dot {
+            width: 8px; height: 8px;
+            background: var(--accent-lime);
+            border-radius: 50%;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s;
+        }
+        .cursor-ring {
+            width: 36px; height: 36px;
+            border: 1.5px solid rgba(198,241,53,0.5);
+            border-radius: 50%;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s, border-color 0.3s;
+        }
+        body:has(a:hover) .cursor-ring,
+        body:has(button:hover) .cursor-ring {
+            width: 56px; height: 56px;
+            border-color: var(--accent-lime);
+        }
+
+        /* ── Noise Overlay ── */
         body::before {
             content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image:
-                radial-gradient(circle at 20% 30%, rgba(123, 165, 145, 0.08) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(217, 119, 87, 0.06) 0%, transparent 50%);
+            position: fixed; inset: 0; z-index: 0;
+            opacity: 0.035;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
             pointer-events: none;
-            z-index: 0;
         }
 
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 3rem;
-            position: relative;
-            z-index: 1;
+        /* ── Ambient Glows ── */
+        .glow-1, .glow-2, .glow-3 {
+            position: fixed; border-radius: 50%;
+            filter: blur(120px); pointer-events: none; z-index: 0;
         }
+        .glow-1 { width: 600px; height: 600px; background: rgba(198,241,53,0.06); top: -200px; right: -100px; }
+        .glow-2 { width: 500px; height: 500px; background: rgba(77,159,255,0.07); bottom: 20%; left: -150px; }
+        .glow-3 { width: 400px; height: 400px; background: rgba(255,196,83,0.05); bottom: -100px; right: 10%; }
 
-        /* Header */
+        /* ── Layout ── */
+        .wrap { max-width: 1320px; margin: 0 auto; padding: 0 2.5rem; position: relative; z-index: 1; }
+
+        /* ── Header ── */
         header {
-            padding: 1.6rem 0;
-            position: sticky;
-            top: 0;
-            background: rgba(26, 31, 46, 0.85);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(244, 241, 234, 0.08);
-            z-index: 100;
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            padding: 1.2rem 0;
         }
-
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        header::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: rgba(13,15,20,0.7);
+            backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid var(--glass-border);
         }
-
+        nav { display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 1; }
         .logo {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: var(--sand);
+            font-family: 'Syne', sans-serif;
+            font-weight: 800; font-size: 1.35rem;
             letter-spacing: -0.5px;
+            display: flex; align-items: center; gap: 0.6rem;
         }
-
-        .logo span {
-            color: var(--rust);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 1.1rem;
-        }
-
-        .nav-menu {
-            display: flex;
-            gap: 2.5rem;
-            list-style: none;
-        }
-
-        .nav-menu a {
-            color: var(--sand);
-            text-decoration: none;
-            font-size: 0.95rem;
-            font-weight: 500;
-            transition: color 0.3s ease;
-            position: relative;
-        }
-
-        .nav-menu a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--rust);
-            transition: width 0.3s ease;
-        }
-
-        .nav-menu a:hover {
-            color: var(--rust);
-        }
-
-        .nav-menu a:hover::after {
-            width: 100%;
-        }
-
-        /* Hero Section */
-        .hero {
-            padding: 8rem 0 6rem;
-            position: relative;
-        }
-
-        .hero-content {
-            max-width: 720px;
-        }
-
-        .hero-tag {
-            display: inline-block;
-            padding: 0.5rem 1.2rem;
-            background: rgba(123, 165, 145, 0.15);
-            border: 1px solid rgba(123, 165, 145, 0.3);
-            border-radius: 30px;
-            color: var(--sage);
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 2rem;
-            letter-spacing: 0.5px;
-        }
-
-        .hero h1 {
-            font-size: 4rem;
-            font-weight: 700;
-            line-height: 1.1;
-            margin-bottom: 1.5rem;
-            letter-spacing: -1.5px;
-            color: var(--off-white);
-        }
-
-        .hero h1 .highlight {
-            color: var(--rust);
-            position: relative;
-        }
-
-        .hero h1 .accent {
-            color: var(--sage);
-        }
-
-        .hero-description {
-            font-size: 1.15rem;
-            color: var(--sand);
-            margin-bottom: 3rem;
-            max-width: 580px;
-            line-height: 1.8;
-        }
-
-        .cta-group {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        .btn {
-            padding: 0.9rem 2rem;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-            border: none;
-        }
-
-        .btn-primary {
-            background: var(--rust);
-            color: var(--off-white);
-            box-shadow: 0 4px 14px rgba(217, 119, 87, 0.3);
-        }
-
-        .btn-primary:hover {
-            background: var(--terracotta);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(217, 119, 87, 0.4);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--sand);
-            border: 1.5px solid rgba(244, 241, 234, 0.2);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(244, 241, 234, 0.05);
-            border-color: var(--sage);
-            color: var(--sage);
-        }
-
-        /* Section Headings */
-        .section {
-            padding: 5rem 0;
-        }
-
-        .section-header {
-            margin-bottom: 3.5rem;
-        }
-
-        .section-label {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
-            color: var(--rust);
-            font-weight: 600;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            margin-bottom: 1rem;
-        }
-
-        .section-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--off-white);
-            margin-bottom: 1rem;
-            letter-spacing: -0.5px;
-        }
-
-        .section-description {
-            font-size: 1.05rem;
-            color: var(--sand);
-            max-width: 600px;
-        }
-
-        /* Course Stack */
-        .stack-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .stack-card {
-            background: rgba(42, 49, 66, 0.4);
-            border: 1px solid rgba(244, 241, 234, 0.08);
-            border-radius: 12px;
-            padding: 2rem;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stack-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(90deg, var(--rust), var(--gold));
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.4s ease;
-        }
-
-        .stack-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .stack-card:hover {
-            background: rgba(42, 49, 66, 0.7);
-            border-color: rgba(217, 119, 87, 0.3);
-            transform: translateY(-5px);
-        }
-
-        .stack-icon {
-            width: 55px;
-            height: 55px;
-            background: rgba(244, 241, 234, 0.05);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            margin-bottom: 1.3rem;
-            border: 1px solid rgba(244, 241, 234, 0.08);
-        }
-
-        .stack-card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 0.6rem;
-            color: var(--off-white);
-            font-weight: 600;
-        }
-
-        .stack-card .level {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem;
-            color: var(--sage);
-            margin-bottom: 1rem;
-            text-transform: uppercase;
+        .logo-badge {
+            background: var(--accent-lime);
+            color: var(--ink);
+            font-family: 'DM Mono', monospace;
+            font-size: 0.7rem; font-weight: 500;
+            padding: 0.25rem 0.6rem;
+            border-radius: 4px;
             letter-spacing: 1px;
         }
-
-        .stack-card p {
-            color: var(--sand);
-            font-size: 0.95rem;
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
+        .nav-links { display: flex; gap: 0.3rem; list-style: none; align-items: center; }
+        .nav-links a {
+            font-size: 0.88rem; font-weight: 500;
+            color: var(--muted); text-decoration: none;
+            padding: 0.5rem 1rem; border-radius: 6px;
+            transition: all 0.2s;
         }
-
-        .stack-card .card-link {
-            color: var(--rust);
-            font-weight: 600;
-            font-size: 0.9rem;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: gap 0.3s ease;
+        .nav-links a:hover { color: var(--white); background: var(--glass); }
+        .nav-cta {
+            background: var(--accent-lime) !important;
+            color: var(--ink) !important;
+            font-weight: 600 !important;
         }
+        .nav-cta:hover { background: #d4f54a !important; transform: translateY(-1px); }
 
-        .stack-card .card-link:hover {
-            gap: 0.8rem;
+        /* ── Hero ── */
+        .hero { padding: 11rem 0 7rem; position: relative; overflow: hidden; }
+        .hero-grid { display: grid; grid-template-columns: 1fr 480px; gap: 4rem; align-items: center; }
+        .hero-label {
+            display: inline-flex; align-items: center; gap: 0.7rem;
+            font-family: 'DM Mono', monospace; font-size: 0.78rem;
+            color: var(--accent-lime); margin-bottom: 1.8rem;
+            border: 1px solid rgba(198,241,53,0.25);
+            padding: 0.4rem 1rem; border-radius: 30px;
+            background: rgba(198,241,53,0.07);
         }
-
-        /* Projects Grid */
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-            gap: 2rem;
-        }
-
-        .project-card {
-            background: rgba(42, 49, 66, 0.5);
-            border-radius: 14px;
-            overflow: hidden;
-            border: 1px solid rgba(244, 241, 234, 0.08);
-            transition: all 0.4s ease;
-            position: relative;
-        }
-
-        .project-card:hover {
-            transform: translateY(-8px);
-            border-color: rgba(217, 119, 87, 0.3);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-        }
-
-        .project-thumbnail {
-            height: 200px;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3.5rem;
-        }
-
-        .project-thumbnail::after {
+        .hero-label::before {
             content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 50%;
-            background: linear-gradient(to top, rgba(26, 31, 46, 0.8), transparent);
+            width: 6px; height: 6px; border-radius: 50%;
+            background: var(--accent-lime);
+            animation: pulse-dot 2s infinite;
         }
-
-        .thumb-frontend {
-            background: linear-gradient(135deg, #d97757 0%, #c85d3c 100%);
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.7); }
         }
-
-        .thumb-backend {
-            background: linear-gradient(135deg, #7ba591 0%, #5b9aa9 100%);
+        .hero h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(3rem, 6vw, 5.5rem);
+            font-weight: 800;
+            line-height: 1.0;
+            letter-spacing: -2.5px;
+            margin-bottom: 2rem;
         }
-
-        .thumb-fullstack {
-            background: linear-gradient(135deg, #a48cb5 0%, #7ba591 100%);
+        .hero h1 em { font-style: normal; }
+        .stroke-text {
+            -webkit-text-stroke: 2px var(--accent-lime);
+            color: transparent;
         }
-
-        .thumb-design {
-            background: linear-gradient(135deg, #d4a574 0%, #d97757 100%);
+        .gradient-text {
+            background: var(--grad-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-
-        .project-info {
-            padding: 1.8rem;
+        .hero-sub {
+            font-size: 1.1rem; color: var(--muted);
+            line-height: 1.9; max-width: 480px;
+            margin-bottom: 3rem; font-weight: 300;
         }
+        .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+        .btn {
+            padding: 0.85rem 2rem; border-radius: 8px;
+            font-weight: 600; font-size: 0.92rem;
+            cursor: pointer; text-decoration: none;
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            transition: all 0.25s; border: none; font-family: inherit;
+        }
+        .btn-lime {
+            background: var(--accent-lime); color: var(--ink);
+            box-shadow: 0 0 30px rgba(198,241,53,0.3);
+        }
+        .btn-lime:hover { background: #d4f54a; transform: translateY(-2px); box-shadow: 0 0 40px rgba(198,241,53,0.45); }
+        .btn-ghost {
+            background: var(--glass); color: var(--white);
+            border: 1px solid var(--glass-border);
+        }
+        .btn-ghost:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.15); }
 
-        .project-tag {
-            display: inline-block;
-            padding: 0.35rem 0.9rem;
-            background: rgba(217, 119, 87, 0.15);
-            color: var(--rust);
+        /* ── Stats Panel ── */
+        .hero-stats {
+            background: var(--ink-2);
+            border: 1px solid var(--glass-border);
             border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
+            padding: 2rem;
+            display: flex; flex-direction: column; gap: 0.8rem;
+            position: relative; overflow: hidden;
+        }
+        .hero-stats::before {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: var(--grad-1);
+        }
+        .stat-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 1rem 1.2rem;
+            background: var(--glass);
+            border-radius: 10px;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s;
+        }
+        .stat-row:hover { background: rgba(255,255,255,0.07); border-color: rgba(198,241,53,0.2); }
+        .stat-label { font-size: 0.88rem; color: var(--muted); font-weight: 400; }
+        .stat-value {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.95rem; font-weight: 500;
+            color: var(--accent-lime);
+        }
+        .stat-bar-wrap { margin-top: 0.5rem; height: 3px; background: var(--glass-border); border-radius: 3px; overflow: hidden; }
+        .stat-bar { height: 100%; border-radius: 3px; background: var(--grad-1); }
+        .stats-footer {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.75rem; color: var(--muted);
+            text-align: center; padding-top: 0.5rem;
+            opacity: 0.7;
+        }
+
+        /* ── Marquee ── */
+        .marquee-section {
+            padding: 2.5rem 0;
+            border-top: 1px solid var(--glass-border);
+            border-bottom: 1px solid var(--glass-border);
+            overflow: hidden;
+        }
+        .marquee-track {
+            display: flex; gap: 3rem;
+            animation: marquee 25s linear infinite;
+            width: max-content;
+        }
+        @keyframes marquee {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+        .marquee-item {
+            display: flex; align-items: center; gap: 0.8rem;
+            font-family: 'DM Mono', monospace; font-size: 0.8rem;
+            color: var(--muted); white-space: nowrap;
+            letter-spacing: 1.5px; text-transform: uppercase;
+        }
+        .marquee-item .dot {
+            width: 5px; height: 5px; border-radius: 50%;
+            background: var(--accent-lime); opacity: 0.6;
+        }
+
+        /* ── Section Shared ── */
+        section { padding: 6rem 0; position: relative; z-index: 1; }
+        .section-eyebrow {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.75rem; color: var(--accent-lime);
+            letter-spacing: 3px; text-transform: uppercase;
             margin-bottom: 1rem;
-            letter-spacing: 0.5px;
         }
-
-        .project-card h3 {
-            font-size: 1.25rem;
-            margin-bottom: 0.6rem;
-            color: var(--off-white);
-            font-weight: 600;
+        .section-title {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800; letter-spacing: -1px;
+            line-height: 1.1; margin-bottom: 1rem;
         }
+        .section-desc { color: var(--muted); font-size: 1.05rem; max-width: 540px; line-height: 1.8; font-weight: 300; }
 
-        .project-card p {
-            color: var(--sand);
-            font-size: 0.92rem;
-            line-height: 1.6;
+        /* ── Learning Path ── */
+        #learning { background: radial-gradient(ellipse at top right, rgba(77,159,255,0.04) 0%, transparent 60%); }
+        .path-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3.5rem; flex-wrap: wrap; gap: 2rem; }
+        
+        .modules-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 1.2rem; }
+        .module-card {
+            background: var(--ink-2);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px; padding: 2rem;
+            transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+            position: relative; overflow: hidden; cursor: default;
+        }
+        .module-card::after {
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(circle at 80% 20%, rgba(198,241,53,0.06) 0%, transparent 60%);
+            opacity: 0; transition: opacity 0.4s;
+        }
+        .module-card:hover { transform: translateY(-6px); border-color: rgba(198,241,53,0.25); background: var(--ink-3); }
+        .module-card:hover::after { opacity: 1; }
+        .module-num {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.7rem; color: var(--muted);
+            margin-bottom: 1.2rem; letter-spacing: 2px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .module-status {
+            padding: 0.2rem 0.7rem; border-radius: 20px;
+            font-size: 0.68rem; letter-spacing: 1px;
+        }
+        .status-live { background: rgba(198,241,53,0.15); color: var(--accent-lime); }
+        .status-soon { background: rgba(138,143,158,0.12); color: var(--muted); }
+        .module-icon {
+            width: 52px; height: 52px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.6rem; margin-bottom: 1.4rem;
+            border: 1px solid var(--glass-border);
+        }
+        .icon-web { background: rgba(77,159,255,0.12); }
+        .icon-html { background: rgba(255,107,107,0.12); }
+        .icon-css { background: rgba(198,241,53,0.1); }
+        .icon-js { background: rgba(255,196,83,0.12); }
+        .icon-react { background: rgba(62,207,207,0.1); }
+        .icon-node { background: rgba(198,241,53,0.12); }
+        .icon-db { background: rgba(164,140,181,0.12); }
+        .icon-devops { background: rgba(77,159,255,0.12); }
+        .icon-ref { background: rgba(255,196,83,0.1); }
+        .module-card h3 { font-family: 'Syne', sans-serif; font-size: 1.15rem; font-weight: 700; margin-bottom: 0.4rem; }
+        .module-level { font-size: 0.78rem; color: var(--accent-teal); margin-bottom: 0.9rem; font-weight: 500; }
+        .module-card p { color: var(--muted); font-size: 0.88rem; line-height: 1.65; margin-bottom: 1.5rem; font-weight: 300; }
+        .module-link {
+            display: inline-flex; align-items: center; gap: 0.4rem;
+            font-size: 0.85rem; font-weight: 600;
+            color: var(--accent-lime); text-decoration: none;
+            transition: gap 0.2s;
+        }
+        .module-link.disabled { color: var(--muted); pointer-events: none; }
+        .module-link:hover { gap: 0.8rem; }
+        .module-progress { margin-top: 1.2rem; }
+        .prog-bar { height: 2px; background: var(--glass-border); border-radius: 2px; overflow: hidden; }
+        .prog-fill { height: 100%; border-radius: 2px; background: var(--grad-1); transition: width 1s ease; }
+
+        /* ── Timeline / Path ── */
+        .journey-timeline {
+            display: flex; flex-direction: column; gap: 0;
+            margin: 4rem 0;
+            position: relative;
+        }
+        .timeline-line {
+            position: absolute; left: 32px; top: 0; bottom: 0;
+            width: 1px; background: linear-gradient(to bottom, var(--accent-lime), var(--accent-teal), transparent);
+            opacity: 0.3;
+        }
+        .tl-item {
+            display: flex; gap: 2rem; align-items: flex-start;
+            padding: 1.5rem 0;
+        }
+        .tl-node {
+            width: 64px; height: 64px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.3rem; flex-shrink: 0; z-index: 1;
+            border: 2px solid var(--glass-border);
+            background: var(--ink-2);
+            transition: all 0.3s;
+        }
+        .tl-item:hover .tl-node { border-color: var(--accent-lime); box-shadow: 0 0 20px rgba(198,241,53,0.2); }
+        .tl-body h4 { font-family: 'Syne', sans-serif; font-weight: 700; margin-bottom: 0.4rem; }
+        .tl-body p { color: var(--muted); font-size: 0.9rem; font-weight: 300; line-height: 1.6; }
+
+        /* ── Projects ── */
+        #projects { background: radial-gradient(ellipse at bottom left, rgba(255,107,107,0.04) 0%, transparent 60%); }
+        .projects-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 1.5rem; }
+        .p-card {
+            background: var(--ink-2);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px; overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+            position: relative;
+        }
+        .p-card:hover { transform: translateY(-8px); box-shadow: 0 30px 60px rgba(0,0,0,0.4); border-color: rgba(255,255,255,0.12); }
+        .p-card.large { grid-column: span 7; }
+        .p-card.medium { grid-column: span 5; }
+        .p-card.small { grid-column: span 4; }
+        .p-thumb {
+            height: 220px; position: relative; overflow: hidden;
+            display: flex; align-items: center; justify-content: center; font-size: 4rem;
+        }
+        .p-card.large .p-thumb { height: 280px; }
+        .p-thumb-1 { background: linear-gradient(135deg, #1a1f2e 0%, #2a3460 50%, #1e2845 100%); }
+        .p-thumb-2 { background: linear-gradient(135deg, #1a2520 0%, #1e3a30 50%, #152820 100%); }
+        .p-thumb-3 { background: linear-gradient(135deg, #2a1a2e 0%, #3d2060 50%, #251535 100%); }
+        .p-thumb-4 { background: linear-gradient(135deg, #2a2010 0%, #3a3020 50%, #251f10 100%); }
+        .p-thumb-5 { background: linear-gradient(135deg, #1a2a1a 0%, #203520 50%, #151f15 100%); }
+        .p-thumb-6 { background: linear-gradient(135deg, #1e1a2e 0%, #302a4a 50%, #201a35 100%); }
+        .p-thumb-float {
+            position: relative; z-index: 2;
+            filter: drop-shadow(0 20px 40px rgba(0,0,0,0.5));
+            font-size: 4.5rem;
+        }
+        .p-thumb::after {
+            content: '';
+            position: absolute; bottom: 0; left: 0; right: 0; height: 50%;
+            background: linear-gradient(to top, var(--ink-2), transparent);
+            z-index: 1;
+        }
+        .p-body { padding: 1.8rem; }
+        .p-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+        .p-tag {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.7rem; padding: 0.3rem 0.7rem;
+            border-radius: 4px; letter-spacing: 0.5px;
+        }
+        .tag-html { background: rgba(255,107,107,0.15); color: #ff9898; }
+        .tag-css { background: rgba(77,159,255,0.15); color: #7ab8ff; }
+        .tag-js { background: rgba(255,196,83,0.15); color: #ffcc66; }
+        .tag-bootstrap { background: rgba(164,140,181,0.15); color: #c5a8e0; }
+        .tag-tailwind { background: rgba(62,207,207,0.15); color: #6edfdf; }
+        .p-body h3 { font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 700; margin-bottom: 0.6rem; }
+        .p-body p { color: var(--muted); font-size: 0.88rem; line-height: 1.65; margin-bottom: 1.5rem; font-weight: 300; }
+        .p-link {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            font-size: 0.85rem; font-weight: 600;
+            color: var(--accent-teal); text-decoration: none;
+            transition: gap 0.25s;
+        }
+        .p-link:hover { gap: 0.9rem; color: var(--accent-lime); }
+        .p-link-icon { font-size: 0.8rem; transition: transform 0.25s; }
+        .p-link:hover .p-link-icon { transform: translate(3px,-3px); }
+
+        /* ── Skills Matrix ── */
+        #skills { background: radial-gradient(ellipse at center, rgba(62,207,207,0.04) 0%, transparent 70%); }
+        .skills-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+        .skill-category { margin-bottom: 2.5rem; }
+        .skill-cat-label {
+            font-family: 'DM Mono', monospace;
+            font-size: 0.72rem; letter-spacing: 2px;
+            color: var(--accent-teal); text-transform: uppercase;
             margin-bottom: 1.2rem;
         }
-
-        .project-link {
-            color: var(--sage);
-            font-weight: 600;
-            font-size: 0.9rem;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            transition: all 0.3s ease;
+        .skill-item { margin-bottom: 1rem; }
+        .skill-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; }
+        .skill-name { font-size: 0.88rem; font-weight: 500; color: var(--white); }
+        .skill-pct { font-family: 'DM Mono', monospace; font-size: 0.75rem; color: var(--muted); }
+        .skill-track { height: 3px; background: var(--glass-border); border-radius: 3px; overflow: hidden; }
+        .skill-fill {
+            height: 100%; border-radius: 3px;
+            background: var(--grad-1);
+            width: 0;
+            transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
         }
+        .skill-fill.fill-2 { background: var(--grad-2); }
+        .skill-fill.fill-3 { background: linear-gradient(135deg, #4d9fff, #3ecfcf); }
 
-        .project-link:hover {
-            color: var(--ocean);
-            gap: 0.7rem;
+        /* ── Resources ── */
+        .resources-cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+        .res-card {
+            background: var(--ink-2);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px; padding: 2rem;
+            transition: all 0.3s; position: relative; overflow: hidden;
         }
-
-        /* Resources Section */
-        .resources-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 1.8rem;
+        .res-card::before {
+            content: '';
+            position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
         }
+        .res-card.r1::before { background: linear-gradient(90deg, var(--accent-blue), var(--accent-teal)); }
+        .res-card.r2::before { background: linear-gradient(90deg, var(--accent-lime), var(--accent-teal)); }
+        .res-card.r3::before { background: linear-gradient(90deg, var(--accent-amber), var(--accent-red)); }
+        .res-card:hover { background: var(--ink-3); border-color: rgba(255,255,255,0.1); transform: translateY(-4px); }
+        .res-icon { font-size: 2rem; margin-bottom: 1.2rem; }
+        .res-card h4 { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; }
+        .res-card ul { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+        .res-card li { color: var(--muted); font-size: 0.88rem; display: flex; align-items: center; gap: 0.6rem; }
+        .res-card li::before { content: '→'; color: var(--accent-teal); font-size: 0.75rem; }
 
-        .resource-card {
-            background: rgba(61, 67, 84, 0.3);
-            padding: 2rem;
-            border-radius: 12px;
-            border: 1px solid rgba(244, 241, 234, 0.08);
-            border-left: 4px solid var(--sage);
-            transition: all 0.3s ease;
+        /* ── CTA Banner ── */
+        .cta-banner {
+            background: var(--ink-2);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px; padding: 4rem;
+            text-align: center; position: relative; overflow: hidden;
+            margin: 4rem 0;
         }
-
-        .resource-card:hover {
-            background: rgba(61, 67, 84, 0.5);
-            border-left-color: var(--rust);
+        .cta-banner::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse at center, rgba(198,241,53,0.06) 0%, transparent 70%);
         }
-
-        .resource-card h4 {
-            font-size: 1.2rem;
-            margin-bottom: 0.8rem;
-            color: var(--off-white);
+        .cta-banner h2 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            font-weight: 800; letter-spacing: -1px;
+            margin-bottom: 1rem; position: relative; z-index: 1;
         }
+        .cta-banner p { color: var(--muted); font-size: 1.05rem; margin-bottom: 2.5rem; position: relative; z-index: 1; font-weight: 300; }
+        .cta-actions { display: flex; gap: 1rem; justify-content: center; position: relative; z-index: 1; }
 
-        .resource-card ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .resource-card li {
-            padding: 0.5rem 0;
-            color: var(--sand);
-            font-size: 0.92rem;
-            padding-left: 1.2rem;
-            position: relative;
-        }
-
-        .resource-card li::before {
-            content: '▸';
-            position: absolute;
-            left: 0;
-            color: var(--sage);
-        }
-
-        /* Footer */
+        /* ── Footer ── */
         footer {
-            margin-top: 5rem;
-            padding: 3rem 0;
-            border-top: 1px solid rgba(244, 241, 234, 0.08);
-            text-align: center;
+            border-top: 1px solid var(--glass-border);
+            padding: 2.5rem 0;
+        }
+        .footer-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem; }
+        .footer-brand { font-family: 'Syne', sans-serif; font-weight: 700; }
+        .footer-copy { color: var(--muted); font-size: 0.85rem; }
+        .footer-links-row { display: flex; gap: 2rem; }
+        .footer-links-row a { color: var(--muted); font-size: 0.88rem; text-decoration: none; transition: color 0.2s; }
+        .footer-links-row a:hover { color: var(--accent-lime); }
+
+        /* ── Reveal Animations ── */
+        .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+        .reveal-delay-4 { transition-delay: 0.4s; }
+
+        /* ── Floating Scroll Indicator ── */
+        .scroll-indicator {
+            position: fixed; bottom: 2rem; right: 2rem; z-index: 50;
+            width: 48px; height: 48px; border-radius: 50%;
+            background: var(--accent-lime); color: var(--ink);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; cursor: pointer;
+            box-shadow: 0 4px 20px rgba(198,241,53,0.4);
+            opacity: 0; pointer-events: none;
+            transition: all 0.3s;
+        }
+        .scroll-indicator.show { opacity: 1; pointer-events: all; }
+        .scroll-indicator:hover { transform: translateY(-4px); }
+
+        /* ── Progress Bar Top ── */
+        .progress-bar {
+            position: fixed; top: 0; left: 0; height: 2px; z-index: 200;
+            background: var(--grad-1);
+            transform-origin: left;
+            transform: scaleX(0);
+            transition: transform 0.1s;
         }
 
-        .footer-content {
-            color: var(--sand);
-            font-size: 0.9rem;
+        /* ── Responsive ── */
+        @media (max-width: 1024px) {
+            .hero-grid { grid-template-columns: 1fr; }
+            .hero-stats { display: none; }
+            .p-card.large, .p-card.medium, .p-card.small { grid-column: span 6; }
+            .skills-wrap { grid-template-columns: 1fr; }
+            .resources-cols { grid-template-columns: 1fr 1fr; }
         }
-
-        .footer-links {
-            margin-top: 1rem;
-            display: flex;
-            gap: 2rem;
-            justify-content: center;
-        }
-
-        .footer-links a {
-            color: var(--sage);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .footer-links a:hover {
-            color: var(--rust);
-        }
-
-        /* Responsive */
         @media (max-width: 768px) {
-            .container {
-                padding: 0 1.5rem;
-            }
-
-            .hero h1 {
-                font-size: 2.8rem;
-            }
-
-            .nav-menu {
-                display: none;
-            }
-
-            .cta-group {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .section-title {
-                font-size: 2rem;
-            }
-
-            .stack-grid,
-            .projects-grid {
-                grid-template-columns: 1fr;
-            }
+            .wrap { padding: 0 1.2rem; }
+            .p-card.large, .p-card.medium, .p-card.small { grid-column: span 12; }
+            .resources-cols { grid-template-columns: 1fr; }
+            .cta-actions { flex-direction: column; align-items: center; }
+            .nav-links { display: none; }
+            body { cursor: auto; }
+            #cursor { display: none; }
         }
     </style>
 </head>
-
 <body>
 
-    <header>
-        <div class="container">
-            <nav>
-                <div class="logo">
-                    fullstack<span> -RRK</span>
+<!-- Custom Cursor -->
+<div id="cursor">
+    <div class="cursor-ring"></div>
+    <div class="cursor-dot"></div>
+</div>
+
+<!-- Ambient Glows -->
+<div class="glow-1"></div>
+<div class="glow-2"></div>
+<div class="glow-3"></div>
+
+<!-- Progress Bar -->
+<div class="progress-bar" id="progress-bar"></div>
+
+<!-- Scroll to Top -->
+<div class="scroll-indicator" id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+
+<!-- ── Header ── -->
+<header>
+    <div class="wrap">
+        <nav>
+            <div class="logo">
+                RRK <span class="logo-badge">DEV</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#learning">Path</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#resources">Resources</a></li>
+                <li><a href="https://github.com/Raviranjan010/" target="_blank" class="nav-cta">GitHub ↗</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<!-- ── Hero ── -->
+<section class="hero">
+    <div class="wrap">
+        <div class="hero-grid">
+            <div>
+                <div class="hero-label">Fullstack Development Curriculum</div>
+                <h1>
+                    From<br>
+                    <em class="stroke-text">Zero</em><br>
+                    to <span class="gradient-text">Full&shy;Stack</span>
+                </h1>
+                <p class="hero-sub">
+                    A structured journey through modern web development — crafting pixel-perfect interfaces, building robust backends, and shipping real products that work.
+                </p>
+                <div class="hero-actions">
+                    <a href="#learning" class="btn btn-lime">Start Learning ↓</a>
+                    <a href="#projects" class="btn btn-ghost">View Projects</a>
                 </div>
-                <ul class="nav-menu">
-                    <li><a href="#learning">Learning Path</a></li>
-                    <li><a href="#projects">Projects</a></li>
-                    <li><a href="#resources">Resources</a></li>
+            </div>
+
+            <div class="hero-stats reveal reveal-delay-2">
+                <div class="stat-row">
+                    <span class="stat-label">Modules Completed</span>
+                    <span class="stat-value">4 / 8</span>
+                </div>
+                <div class="stat-bar-wrap"><div class="stat-bar" style="width:50%"></div></div>
+                <div class="stat-row">
+                    <span class="stat-label">Projects Built</span>
+                    <span class="stat-value">6 Live Demos</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Current Focus</span>
+                    <span class="stat-value">JavaScript ES6+</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Next Module</span>
+                    <span class="stat-value">React & Frameworks</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">GitHub Activity</span>
+                    <span class="stat-value">Active ●</span>
+                </div>
+                <div class="stats-footer">// updated February 2026</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── Marquee ── -->
+<div class="marquee-section">
+    <div class="marquee-track" id="marquee">
+        <span class="marquee-item"><span class="dot"></span> HTML5</span>
+        <span class="marquee-item"><span class="dot"></span> CSS3 & Tailwind</span>
+        <span class="marquee-item"><span class="dot"></span> JavaScript ES6+</span>
+        <span class="marquee-item"><span class="dot"></span> React</span>
+        <span class="marquee-item"><span class="dot"></span> Node.js</span>
+        <span class="marquee-item"><span class="dot"></span> Express.js</span>
+        <span class="marquee-item"><span class="dot"></span> PostgreSQL</span>
+        <span class="marquee-item"><span class="dot"></span> MongoDB</span>
+        <span class="marquee-item"><span class="dot"></span> REST APIs</span>
+        <span class="marquee-item"><span class="dot"></span> Git & GitHub</span>
+        <span class="marquee-item"><span class="dot"></span> Docker</span>
+        <span class="marquee-item"><span class="dot"></span> CI/CD</span>
+        <span class="marquee-item"><span class="dot"></span> HTML5</span>
+        <span class="marquee-item"><span class="dot"></span> CSS3 & Tailwind</span>
+        <span class="marquee-item"><span class="dot"></span> JavaScript ES6+</span>
+        <span class="marquee-item"><span class="dot"></span> React</span>
+        <span class="marquee-item"><span class="dot"></span> Node.js</span>
+        <span class="marquee-item"><span class="dot"></span> Express.js</span>
+        <span class="marquee-item"><span class="dot"></span> PostgreSQL</span>
+        <span class="marquee-item"><span class="dot"></span> MongoDB</span>
+        <span class="marquee-item"><span class="dot"></span> REST APIs</span>
+        <span class="marquee-item"><span class="dot"></span> Git & GitHub</span>
+        <span class="marquee-item"><span class="dot"></span> Docker</span>
+        <span class="marquee-item"><span class="dot"></span> CI/CD</span>
+    </div>
+</div>
+
+<!-- ── Learning Path ── -->
+<section id="learning">
+    <div class="wrap">
+        <div class="path-header">
+            <div>
+                <div class="section-eyebrow">// Curriculum</div>
+                <h2 class="section-title">Master Every Layer<br>of the Stack</h2>
+            </div>
+            <p class="section-desc">Structured modules from web fundamentals to production deployment.</p>
+        </div>
+
+        <div class="modules-grid">
+            <!-- Module 00 -->
+            <div class="module-card reveal">
+                <div class="module-num">00 — Foundation <span class="module-status status-live">● Live</span></div>
+                <div class="module-icon icon-web">🌐</div>
+                <h3>Web Fundamentals</h3>
+                <div class="module-level">Foundation Layer</div>
+                <p>HTTP, DNS, browsers, developer tools, version control with Git, and how the internet actually works.</p>
+                <div class="module-progress">
+                    <div class="prog-bar"><div class="prog-fill" data-width="100"></div></div>
+                </div>
+                <a href="https://github.com/Raviranjan010/Web_Development_Notes/tree/main/00_Web_Fundamentals" class="module-link" target="_blank">
+                    Explore Module →
+                </a>
+            </div>
+
+            <!-- Module 01 -->
+            <div class="module-card reveal reveal-delay-1">
+                <div class="module-num">01 — HTML <span class="module-status status-live">● Live</span></div>
+                <div class="module-icon icon-html">📐</div>
+                <h3>HTML5 & Semantics</h3>
+                <div class="module-level">Frontend Core</div>
+                <p>Document structure, semantic elements, forms, accessibility best practices, and SEO-friendly markup.</p>
+                <div class="module-progress">
+                    <div class="prog-bar"><div class="prog-fill" data-width="100"></div></div>
+                </div>
+                <a href="https://github.com/Raviranjan010/Web_Development_Notes/tree/main/01_HTML" class="module-link" target="_blank">
+                    Explore Module →
+                </a>
+            </div>
+
+            <!-- Module 02 -->
+            <div class="module-card reveal reveal-delay-2">
+                <div class="module-num">02 — CSS <span class="module-status status-live">● Live</span></div>
+                <div class="module-icon icon-css">🎨</div>
+                <h3>CSS3 & Design Systems</h3>
+                <div class="module-level">Frontend Core</div>
+                <p>Flexbox, Grid, animations, responsive design, Tailwind, Bootstrap, and modern styling techniques.</p>
+                <div class="module-progress">
+                    <div class="prog-bar"><div class="prog-fill" data-width="100"></div></div>
+                </div>
+                <a href="https://github.com/Raviranjan010/Web_Development_Notes/tree/main/02_CSS" class="module-link" target="_blank">
+                    Explore Module →
+                </a>
+            </div>
+
+            <!-- Module 03 -->
+            <div class="module-card reveal reveal-delay-3">
+                <div class="module-num">03 — JavaScript <span class="module-status status-live">● Live</span></div>
+                <div class="module-icon icon-js">⚡</div>
+                <h3>JavaScript ES6+</h3>
+                <div class="module-level">Frontend Logic</div>
+                <p>Modern JS, DOM manipulation, async/await, fetch API, modules, closures, and functional programming.</p>
+                <div class="module-progress">
+                    <div class="prog-bar"><div class="prog-fill" data-width="75"></div></div>
+                </div>
+                <a href="https://github.com/Raviranjan010/Web_Development_Notes/tree/main/03_JavaScript" class="module-link" target="_blank">
+                    Explore Module →
+                </a>
+            </div>
+
+            <!-- Module 04 -->
+            <div class="module-card reveal">
+                <div class="module-num">04 — React <span class="module-status status-soon">Coming Soon</span></div>
+                <div class="module-icon icon-react">⚛️</div>
+                <h3>React & Frameworks</h3>
+                <div class="module-level">Frontend Advanced</div>
+                <p>Component architecture, hooks, state management, routing, context API, and building production SPAs.</p>
+                <div class="module-progress">
+                    <div class="prog-bar"><div class="prog-fill" data-width="0"></div></div>
+                </div>
+                <span class="module-link disabled">Not Yet Available</span>
+            </div>
+
+            <!-- Module 05 -->
+            <div class="module-card reveal reveal-delay-1">
+                <div class="module-num">05 — Node.js <span class="module-status status-soon">Coming Soon</span></div>
+                <div class="module-icon icon-node">🔧</div>
+                <h3>Node.js & Backend</h3>
+                <div class="module-level">Backend Core</div>
+                <p>Server-side JavaScript, Express.js, RESTful APIs, authentication, JWT, middleware, and error handling.</p>
+                <div class="module-progress">
+                    <div class="prog-bar"><div class="prog-fill" data-width="0"></div></div>
+                </div>
+                <span class="module-link disabled">Not Yet Available</span>
+            </div>
+
+            <!-- Module 06 -->
+            <div class="module-card reveal reveal-delay-2">
+                <div class="module-num">06 — Databases <span class="module-status status-soon">Coming Soon</span></div>
+                <div class="module-icon icon-db">🗄️</div>
+                <h3>Databases & SQL</h3>
+                <div class="module-level">Backend Data</div>
+                <p>PostgreSQL, MongoDB, database design, complex queries, indexing, relationships, and data modeling.</p>
+                <div class="module-progress">
+                    <div class="prog-bar"><div class="prog-fill" data-width="0"></div></div>
+                </div>
+                <span class="module-link disabled">Not Yet Available</span>
+            </div>
+
+            <!-- Module 07 -->
+            <div class="module-card reveal reveal-delay-3">
+                <div class="module-num">07 — DevOps <span class="module-status status-soon">Coming Soon</span></div>
+                <div class="module-icon icon-devops">🚀</div>
+                <h3>Deployment & DevOps</h3>
+                <div class="module-level">Production</div>
+                <p>Docker, CI/CD pipelines, cloud platforms, nginx, monitoring, logging, and shipping production apps.</p>
+                <div class="module-progress">
+                    <div class="prog-bar"><div class="prog-fill" data-width="0"></div></div>
+                </div>
+                <span class="module-link disabled">Not Yet Available</span>
+            </div>
+
+            <!-- Reference -->
+            <div class="module-card reveal">
+                <div class="module-num">REF — Revision <span class="module-status status-live">● Live</span></div>
+                <div class="module-icon icon-ref">📚</div>
+                <h3>Quick Reference</h3>
+                <div class="module-level">Cheatsheets & Interview Prep</div>
+                <p>Cheatsheets, commonly asked interview questions, pattern libraries, and last-minute reference guides.</p>
+                <div class="module-progress">
+                    <div class="prog-bar"><div class="prog-fill" data-width="60"></div></div>
+                </div>
+                <a href="https://github.com/Raviranjan010/Web_Development_Notes/tree/main/05_Revision" class="module-link" target="_blank">
+                    View Cheatsheets →
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── Projects ── -->
+<section id="projects">
+    <div class="wrap">
+        <div class="path-header">
+            <div>
+                <div class="section-eyebrow">// Live Builds</div>
+                <h2 class="section-title">Projects That Teach</h2>
+            </div>
+            <p class="section-desc">Real-world applications built from scratch. Each project demonstrates real techniques.</p>
+        </div>
+
+        <div class="projects-grid">
+            <div class="p-card large reveal">
+                <div class="p-thumb p-thumb-1">
+                    <span class="p-thumb-float">👨‍💻</span>
+                </div>
+                <div class="p-body">
+                    <div class="p-tags">
+                        <span class="p-tag tag-html">HTML5</span>
+                        <span class="p-tag tag-css">CSS3</span>
+                        <span class="p-tag tag-js">JavaScript</span>
+                    </div>
+                    <h3>Developer Portfolio</h3>
+                    <p>A clean, responsive portfolio showcasing your work with smooth animations, interactive sections, and a professional layout ready for recruiters.</p>
+                    <a href="./Projects_Preview/portfolio/index.html" class="p-link" target="_blank">
+                        View Live Demo <span class="p-link-icon">↗</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="p-card medium reveal reveal-delay-1">
+                <div class="p-thumb p-thumb-2">
+                    <span class="p-thumb-float">🌍</span>
+                </div>
+                <div class="p-body">
+                    <div class="p-tags">
+                        <span class="p-tag tag-bootstrap">Bootstrap</span>
+                        <span class="p-tag tag-html">HTML5</span>
+                    </div>
+                    <h3>Chrome Landing Clone</h3>
+                    <p>Pixel-perfect recreation of Google Chrome's homepage using Bootstrap's grid system.</p>
+                    <a href="./Projects_Preview/chrome_clone/index.html" class="p-link" target="_blank">
+                        View Live Demo <span class="p-link-icon">↗</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="p-card small reveal reveal-delay-2">
+                <div class="p-thumb p-thumb-3">
+                    <span class="p-thumb-float">✍️</span>
+                </div>
+                <div class="p-body">
+                    <div class="p-tags">
+                        <span class="p-tag tag-tailwind">Tailwind</span>
+                    </div>
+                    <h3>Modern Blog</h3>
+                    <p>Utility-first design with Tailwind featuring cards, typography, and responsive layouts.</p>
+                    <a href="./Projects_Preview/tailwind_blog/index.html" class="p-link" target="_blank">
+                        View Demo <span class="p-link-icon">↗</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="p-card small reveal">
+                <div class="p-thumb p-thumb-4">
+                    <span class="p-thumb-float">💼</span>
+                </div>
+                <div class="p-body">
+                    <div class="p-tags">
+                        <span class="p-tag tag-bootstrap">Bootstrap</span>
+                    </div>
+                    <h3>Job Search Portal</h3>
+                    <p>Complete job listing dashboard with advanced filtering and clean UI.</p>
+                    <a href="./Projects_Preview/job_search_portal/index.html" class="p-link" target="_blank">
+                        View Demo <span class="p-link-icon">↗</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="p-card medium reveal reveal-delay-1">
+                <div class="p-thumb p-thumb-5">
+                    <span class="p-thumb-float">🛍️</span>
+                </div>
+                <div class="p-body">
+                    <div class="p-tags">
+                        <span class="p-tag tag-js">JavaScript</span>
+                        <span class="p-tag tag-html">HTML5</span>
+                    </div>
+                    <h3>E-Commerce Store</h3>
+                    <p>Interactive shopping experience with product filtering, cart management, and dynamic pricing built in vanilla JS.</p>
+                    <a href="./Projects_Preview/ecommerce/index.html" class="p-link" target="_blank">
+                        View Live Demo <span class="p-link-icon">↗</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="p-card large reveal reveal-delay-2">
+                <div class="p-thumb p-thumb-6">
+                    <span class="p-thumb-float">💡</span>
+                </div>
+                <div class="p-body">
+                    <div class="p-tags">
+                        <span class="p-tag tag-bootstrap">Bootstrap</span>
+                        <span class="p-tag tag-js">JavaScript</span>
+                    </div>
+                    <h3>InnoCascade Platform</h3>
+                    <p>Modern business landing page with scroll animations, testimonials, and conversion-focused design. A complete marketing site built with Bootstrap components and custom JS enhancements.</p>
+                    <a href="./Projects_Preview/innocascade/index.html" class="p-link" target="_blank">
+                        View Live Demo <span class="p-link-icon">↗</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── Skills Matrix ── -->
+<section id="skills">
+    <div class="wrap">
+        <div class="section-eyebrow">// Skills</div>
+        <h2 class="section-title" style="margin-bottom:3.5rem;">Current Proficiency</h2>
+
+        <div class="skills-wrap">
+            <div>
+                <div class="skill-category">
+                    <div class="skill-cat-label">Frontend</div>
+                    <div class="skill-item">
+                        <div class="skill-header"><span class="skill-name">HTML5 & Semantics</span><span class="skill-pct">95%</span></div>
+                        <div class="skill-track"><div class="skill-fill" data-width="95"></div></div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header"><span class="skill-name">CSS3 & Responsive Design</span><span class="skill-pct">90%</span></div>
+                        <div class="skill-track"><div class="skill-fill" data-width="90"></div></div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header"><span class="skill-name">Tailwind CSS</span><span class="skill-pct">85%</span></div>
+                        <div class="skill-track"><div class="skill-fill" data-width="85"></div></div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header"><span class="skill-name">JavaScript ES6+</span><span class="skill-pct">75%</span></div>
+                        <div class="skill-track"><div class="skill-fill" data-width="75"></div></div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header"><span class="skill-name">Bootstrap 5</span><span class="skill-pct">88%</span></div>
+                        <div class="skill-track"><div class="skill-fill" data-width="88"></div></div>
+                    </div>
+                </div>
+
+                <div class="skill-category">
+                    <div class="skill-cat-label">Tools & Workflow</div>
+                    <div class="skill-item">
+                        <div class="skill-header"><span class="skill-name">Git & GitHub</span><span class="skill-pct">80%</span></div>
+                        <div class="skill-track"><div class="skill-fill fill-3" data-width="80"></div></div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header"><span class="skill-name">VS Code & DevTools</span><span class="skill-pct">90%</span></div>
+                        <div class="skill-track"><div class="skill-fill fill-3" data-width="90"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="skill-category">
+                    <div class="skill-cat-label">Backend (In Progress)</div>
+                    <div class="skill-item">
+                        <div class="skill-header"><span class="skill-name">Node.js</span><span class="skill-pct">20%</span></div>
+                        <div class="skill-track"><div class="skill-fill fill-2" data-width="20"></div></div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header"><span class="skill-name">Express.js</span><span class="skill-pct">15%</span></div>
+                        <div class="skill-track"><div class="skill-fill fill-2" data-width="15"></div></div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header"><span class="skill-name">SQL / PostgreSQL</span><span class="skill-pct">10%</span></div>
+                        <div class="skill-track"><div class="skill-fill fill-2" data-width="10"></div></div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header"><span class="skill-name">REST API Design</span><span class="skill-pct">25%</span></div>
+                        <div class="skill-track"><div class="skill-fill fill-2" data-width="25"></div></div>
+                    </div>
+                </div>
+
+                <div class="skill-category">
+                    <div class="skill-cat-label">Next to Learn</div>
+                    <div class="skill-item">
+                        <div class="skill-header"><span class="skill-name">React.js</span><span class="skill-pct">0%</span></div>
+                        <div class="skill-track"><div class="skill-fill fill-2" data-width="0"></div></div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header"><span class="skill-name">MongoDB / NoSQL</span><span class="skill-pct">0%</span></div>
+                        <div class="skill-track"><div class="skill-fill fill-2" data-width="0"></div></div>
+                    </div>
+                    <div class="skill-item">
+                        <div class="skill-header"><span class="skill-name">Docker & Deployment</span><span class="skill-pct">0%</span></div>
+                        <div class="skill-track"><div class="skill-fill fill-2" data-width="0"></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── Resources ── -->
+<section id="resources">
+    <div class="wrap">
+        <div class="section-eyebrow">// Resources</div>
+        <h2 class="section-title" style="margin-bottom:3rem;">Keep Learning</h2>
+        <div class="resources-cols">
+            <div class="res-card r1 reveal">
+                <div class="res-icon">📖</div>
+                <h4>Documentation</h4>
+                <ul>
+                    <li>Course README & Getting Started</li>
+                    <li>Setup Guide & Prerequisites</li>
+                    <li>Project Structure Overview</li>
+                    <li>Coding Standards & Best Practices</li>
                 </ul>
-            </nav>
-        </div>
-    </header>
-
-    <main>
-        <!-- Hero -->
-        <section class="hero">
-            <div class="container">
-                <div class="hero-content">
-                    <span class="hero-tag">Complete Development Curriculum</span>
-                    <h1>
-                        Build the <span class="highlight">Full Stack</span><br>
-                        Frontend to <span class="accent">Backend</span>
-                    </h1>
-                    <p class="hero-description">
-                        A hands-on journey through modern web development. From crafting pixel-perfect interfaces to
-                        building robust server architectures—learn it all with real projects.
-                    </p>
-                    <div class="cta-group">
-                        <a href="#learning" class="btn btn-primary">Start Your Journey</a>
-                        <a href="#projects" class="btn btn-secondary">View Projects</a>
-                    </div>
-                </div>
             </div>
-        </section>
-
-        <!-- Learning Path -->
-        <section id="learning" class="section">
-            <div class="container">
-                <div class="section-header">
-                    <div class="section-label">// Learning Path</div>
-                    <h2 class="section-title">Master Every Layer of the Stack</h2>
-                    <p class="section-description">
-                        Structured modules covering frontend fundamentals, backend architecture, databases, and
-                        deployment strategies.
-                    </p>
-                </div>
-
-                <div class="stack-grid">
-                    <div class="stack-card">
-                        <div class="stack-icon">🌐</div>
-                        <h3>Web Fundamentals</h3>
-                        <div class="level">Foundation</div>
-                        <p>HTTP, DNS, browsers, developer tools, version control with Git, and how the internet actually
-                            works.</p>
-                        <a href="https://github.com/Raviranjan010/Web_Development_Notes/tree/main/00_Web_Fundamentals"
-                            class="card-link">
-                            Explore Fundamentals →
-                        </a>
-                    </div>
-
-                    <div class="stack-card">
-                        <div class="stack-icon">📐</div>
-                        <h3>HTML5 & Semantics</h3>
-                        <div class="level">Frontend Core</div>
-                        <p>Document structure, semantic elements, forms, accessibility best practices, and SEO-friendly
-                            markup.</p>
-                        <a href="https://github.com/Raviranjan010/Web_Development_Notes/tree/main/01_HTML"
-                            class="card-link">
-                            Learn HTML →
-                        </a>
-                    </div>
-
-                    <div class="stack-card">
-                        <div class="stack-icon">🎨</div>
-                        <h3>CSS3 & Design</h3>
-                        <div class="level">Frontend Core</div>
-                        <p>Flexbox, Grid, animations, responsive design, Tailwind, Bootstrap, and modern styling
-                            techniques.</p>
-                        <a href="https://github.com/Raviranjan010/Web_Development_Notes/tree/main/02_CSS"
-                            class="card-link">
-                            Master Styling →
-                        </a>
-                    </div>
-
-                    <div class="stack-card">
-                        <div class="stack-icon">⚡</div>
-                        <h3>JavaScript ES6+</h3>
-                        <div class="level">Frontend Logic</div>
-                        <p>Modern JavaScript, DOM manipulation, async/await, fetch API, modules, and functional
-                            programming.</p>
-                        <a href="https://github.com/Raviranjan010/Web_Development_Notes/tree/main/03_JavaScript"
-                            class="card-link">
-                            Code JavaScript →
-                        </a>
-                    </div>
-
-                    <!-- <div class="stack-card">
-                        <div class="stack-icon">⚛️</div>
-                        <h3>React & Frameworks</h3>
-                        <div class="level">Frontend Advanced</div>
-                        <p>Component-based architecture, state management, hooks, routing, and building scalable SPAs.
-                        </p>
-                        <a href="#" class="card-link">
-                            Coming Soon →
-                        </a>
-                    </div> -->
-
-                    <!-- <div class="stack-card">
-                        <div class="stack-icon">🔧</div>
-                        <h3>Node.js & Backend</h3>
-                        <div class="level">Backend Core</div>
-                        <p>Server-side JavaScript, Express.js, RESTful APIs, authentication, middleware, and
-                            error handling.</p>
-                        <a href="#" class="card-link">
-                            Coming Soon →
-                        </a>
-                    </div> -->
-
-                    <!-- <div class="stack-card">
-                        <div class="stack-icon">🗄️</div>
-                        <h3>Databases & SQL</h3>
-                        <div class="level">Backend Data</div>
-                        <p>PostgreSQL, MongoDB, database design, queries, indexing, relationships, and data modeling.
-                        </p>
-                        <a href="#" class="card-link">
-                            Coming Soon →
-                        </a>
-                    </div> -->
-
-                    <!-- <div class="stack-card">
-                        <div class="stack-icon">🚀</div>
-                        <h3>Deployment & DevOps</h3>
-                        <div class="level">Production</div>
-                        <p>Docker, CI/CD, cloud platforms, nginx, monitoring, logging, and shipping production apps.</p>
-                        <a href="#" class="card-link">
-                            Coming Soon →
-                        </a>
-                    </div> -->
-
-                    <div class="stack-card">
-                        <div class="stack-icon">📚</div>
-                        <h3>Quick Reference</h3>
-                        <div class="level">Revision</div>
-                        <p>Cheatsheets, interview prep, commonly asked questions, and last-minute reference guides.</p>
-                        <a href="https://github.com/Raviranjan010/Web_Development_Notes/tree/main/05_Revision"
-                            class="card-link">
-                            View Cheatsheets →
-                        </a>
-                    </div>
-                </div>
+            <div class="res-card r2 reveal reveal-delay-1">
+                <div class="res-icon">🧠</div>
+                <h4>Practice</h4>
+                <ul>
+                    <li>30 Coding Challenges per Module</li>
+                    <li>Interview Question Bank</li>
+                    <li>Algorithm Practice Sets</li>
+                    <li>Mini Project Briefs</li>
+                </ul>
             </div>
-        </section>
-
-        <!-- Projects -->
-        <section id="projects" class="section">
-            <div class="container">
-                <div class="section-header">
-                    <div class="section-label">// Live Builds</div>
-                    <h2 class="section-title">Projects That Teach</h2>
-                    <p class="section-description">
-                        Real-world applications built from scratch. Each project reinforces core concepts and best
-                        practices.
-                    </p>
-                </div>
-
-                <div class="projects-grid">
-                    <div class="project-card">
-                        <div class="project-thumbnail thumb-frontend">👨‍💻</div>
-                        <div class="project-info">
-                            <span class="project-tag">HTML/CSS/JS</span>
-                            <h3>Developer Portfolio</h3>
-                            <p>A clean, responsive portfolio showcasing your work with smooth animations and interactive
-                                sections.</p>
-                            <a href="./Projects_Preview/portfolio/index.html" class="project-link" target="_blank">
-                                View Live Demo →
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="project-card">
-                        <div class="project-thumbnail thumb-design">🌍</div>
-                        <div class="project-info">
-                            <span class="project-tag">Bootstrap</span>
-                            <h3>Chrome Landing Clone</h3>
-                            <p>Pixel-perfect recreation of Google Chrome's homepage using Bootstrap grid system and
-                                components.</p>
-                            <a href="./Projects_Preview/chrome_clone/index.html" class="project-link" target="_blank">
-                                View Live Demo →
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="project-card">
-                        <div class="project-thumbnail thumb-fullstack">✍️</div>
-                        <div class="project-info">
-                            <span class="project-tag">Tailwind CSS</span>
-                            <h3>Modern Blog Platform</h3>
-                            <p>Utility-first design approach with Tailwind, featuring cards, typography, and responsive
-                                layouts.</p>
-                            <a href="./Projects_Preview/tailwind_blog/index.html" class="project-link" target="_blank">
-                                View Live Demo →
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="project-card">
-                        <div class="project-thumbnail thumb-backend">💼</div>
-                        <div class="project-info">
-                            <span class="project-tag">Bootstrap</span>
-                            <h3>Job Search Portal</h3>
-                            <p>Complete job listing dashboard with advanced filtering, search functionality, and clean
-                                UI.</p>
-                            <a href="./Projects_Preview/job_search_portal/index.html" class="project-link"
-                                target="_blank">
-                                View Live Demo →
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="project-card">
-                        <div class="project-thumbnail thumb-frontend">🛍️</div>
-                        <div class="project-info">
-                            <span class="project-tag">JavaScript</span>
-                            <h3>E-Commerce Store</h3>
-                            <p>Interactive shopping experience with product filtering, cart management, and dynamic
-                                pricing.</p>
-                            <a href="./Projects_Preview/ecommerce/index.html" class="project-link" target="_blank">
-                                View Live Demo →
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="project-card">
-                        <div class="project-thumbnail thumb-fullstack">💡</div>
-                        <div class="project-info">
-                            <span class="project-tag">Bootstrap</span>
-                            <h3>InnoCascade Platform</h3>
-                            <p>Modern business landing page with scroll animations, testimonials, and conversion-focused
-                                design.</p>
-                            <a href="./Projects_Preview/innocascade/index.html" class="project-link" target="_blank">
-                                View Live Demo →
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Resources -->
-        <section id="resources" class="section">
-            <div class="container">
-                <div class="section-header">
-                    <div class="section-label">// Resources</div>
-                    <h2 class="section-title">Keep Learning</h2>
-                </div>
-
-                <div class="resources-grid">
-                    <div class="resource-card">
-                        <h4>Documentation</h4>
-                        <ul>
-                            <li>Course README & Getting Started</li>
-                            <li>Setup Guide & Prerequisites</li>
-                            <li>Project Structure Overview</li>
-                        </ul>
-                    </div>
-
-                    <div class="resource-card">
-                        <h4>Practice</h4>
-                        <ul>
-                            <li>Coding Challenges</li>
-                            <li>Interview Questions</li>
-                            <li>Algorithm Practice</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <p>&copy; 2026 Fullstack Development Journey — Built with dedication for learners</p>
-                <div class="footer-links">
-                    <a href="https://github.com/Raviranjan010/Web_Development_Notes">Documentation</a>
-                    <a href="https://github.com/Raviranjan010/">GitHub</a>
-                    <!-- <a href="#">Feedback</a> -->
-                </div>
+            <div class="res-card r3 reveal reveal-delay-2">
+                <div class="res-icon">🔗</div>
+                <h4>External Links</h4>
+                <ul>
+                    <li>MDN Web Docs</li>
+                    <li>JavaScript.info</li>
+                    <li>CSS Tricks Reference</li>
+                    <li>Frontend Mentor Challenges</li>
+                </ul>
             </div>
         </div>
-    </footer>
 
+        <!-- CTA Banner -->
+        <div class="cta-banner reveal">
+            <h2>Ready to start your journey?</h2>
+            <p>Clone the repo, pick a module, and start building. Everything you need is right there.</p>
+            <div class="cta-actions">
+                <a href="https://github.com/Raviranjan010/Web_Development_Notes" target="_blank" class="btn btn-lime">
+                    ⭐ Star on GitHub
+                </a>
+                <a href="#learning" class="btn btn-ghost">
+                    View Curriculum
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ── Footer ── -->
+<footer>
+    <div class="wrap">
+        <div class="footer-inner">
+            <div>
+                <div class="footer-brand">RRK — Fullstack Journey</div>
+                <div class="footer-copy" style="margin-top:0.3rem">© 2026 — Built with dedication for learners</div>
+            </div>
+            <div class="footer-links-row">
+                <a href="https://github.com/Raviranjan010/Web_Development_Notes" target="_blank">Documentation ↗</a>
+                <a href="https://github.com/Raviranjan010/" target="_blank">GitHub ↗</a>
+                <a href="#learning">Curriculum</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Custom cursor
+    const cursor = document.getElementById('cursor');
+    const dot = cursor.querySelector('.cursor-dot');
+    const ring = cursor.querySelector('.cursor-ring');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dot.style.left = mx + 'px'; dot.style.top = my + 'px'; });
+    function animateRing() {
+        rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+        ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+        requestAnimationFrame(animateRing);
+    }
+    animateRing();
+
+    // Scroll progress
+    const pb = document.getElementById('progress-bar');
+    const st = document.getElementById('scroll-top');
+    window.addEventListener('scroll', () => {
+        const prog = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+        pb.style.transform = `scaleX(${prog})`;
+        st.classList.toggle('show', window.scrollY > 500);
+    });
+
+    // Reveal on scroll
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }});
+    }, { threshold: 0.1 });
+    reveals.forEach(r => observer.observe(r));
+
+    // Animate skill bars on scroll
+    const skillFills = document.querySelectorAll('.skill-fill, .prog-fill');
+    const skillObserver = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                e.target.style.width = e.target.dataset.width + '%';
+                skillObserver.unobserve(e.target);
+            }
+        });
+    }, { threshold: 0.2 });
+    skillFills.forEach(f => skillObserver.observe(f));
+
+    // Stagger module card reveals
+    document.querySelectorAll('.module-card').forEach((card, i) => {
+        card.style.transitionDelay = (i * 0.07) + 's';
+    });
+</script>
 </body>
-
 </html>
